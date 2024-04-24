@@ -1,6 +1,6 @@
-import React from "react";
-import UpdateForm from "./ui/UpdateForm"
+import React from "react"
 import { Titles } from "components/ui/Titles"
+import UpdateForm from "./ui/UpdateForm"
 
 const EditProfile: React.FC = () => {
   return (
@@ -11,5 +11,4 @@ const EditProfile: React.FC = () => {
   )
 }
 
-export default EditProfile; 
-
+export default EditProfile

@@ -1,10 +1,7 @@
-import React from 'react'
-
+import React from "react"
 
 const homePage = () => {
-  return (
-    <section></section>
-  )
+  return <section></section>
 }
 
 export default homePage

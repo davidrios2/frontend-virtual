@@ -1,2 +1,5 @@
-export * from './login.interface';
-export * from './user.interface';
+export * from "./login.interface"
+export * from "./user.interface"
+export * from "./value-ticket.interface"
+export * from "./pasajero.interface"
+export * from "./reserva.interface"

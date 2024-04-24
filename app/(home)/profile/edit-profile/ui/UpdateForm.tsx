@@ -1,8 +1,8 @@
 "use client"
 
-import { SubmitHandler, useForm } from "react-hook-form"
-import Link from "next/link"
 import { Grid, MenuItem, TextField } from "@mui/material"
+import Link from "next/link"
+import { SubmitHandler, useForm } from "react-hook-form"
 import { TelephonePrefixes } from "components/Forms/TelephonePrefixes"
 import { emailValidations } from "utils"
 
@@ -28,7 +28,7 @@ export default function UpdateForm() {
   return (
     <>
       <form onSubmit={handleSubmit(onSubmit)}>
-        <Grid container={true} spacing={2} marginTop={'5px'}>
+        <Grid container={true} spacing={2} marginTop={"5px"}>
           <Grid item xs={12} md={6} lg={6}>
             <TextField
               label="Nombres"

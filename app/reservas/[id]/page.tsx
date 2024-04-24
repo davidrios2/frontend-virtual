@@ -1,8 +1,7 @@
-
 export default function Web() {
-    return (
-        <>
-            <div> Hola Mundo id</div>
-        </>
-    )
+  return (
+    <>
+      <div> Hola Mundo id</div>
+    </>
+  )
 }

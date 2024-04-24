@@ -1,24 +1,22 @@
-'use client';
+"use client"
 
-import Link from 'next/link';
-import { SubmitHandler, useForm } from 'react-hook-form';
-import { useState } from 'react';
-import TextField from '@mui/material/TextField';
-import { Checkbox, Grid, Typography } from '@mui/material';
-import MenuItem from '@mui/material/MenuItem';
+import { Checkbox, Grid, Typography } from "@mui/material"
+import MenuItem from "@mui/material/MenuItem"
+import TextField from "@mui/material/TextField"
+import Link from "next/link"
+import { useState } from "react"
+import { SubmitHandler, useForm } from "react-hook-form"
 
+import { TelephonePrefixes } from "components/Forms/TelephonePrefixes"
+import { identificationTypes, UserInterface } from "interfaces"
 import { emailValidations, passwordValidations } from "utils"
-import { TelephonePrefixes } from 'components/Forms/TelephonePrefixes';
-import { identificationTypes, UserInterface, } from 'interfaces';
 
 export const RegisterForm = () => {
-
   const [errorMessage, setErrorMessage] = useState("")
   const {
     register,
     handleSubmit,
     formState: { errors },
-    getValues,
     setValue,
     watch,
   } = useForm<UserInterface>()
@@ -135,7 +133,6 @@ export const RegisterForm = () => {
             })}
             error={!!errors.telephonePrefix}
             helperText={errors.telephonePrefix?.message}
-
           >
             {TelephonePrefixes.map((option) => (
               <MenuItem key={option.value} value={option.value}>
@@ -175,7 +172,7 @@ export const RegisterForm = () => {
         </Grid>
       </Grid>
 
-      <button className="mb-3 mt-3 flex h-10 items-center justify-center rounded bg-blue-500 text-center text-white">
+      <button className="my-3 flex h-10 items-center justify-center rounded bg-blue-500 text-center text-white">
         Crear cuenta
       </button>
 

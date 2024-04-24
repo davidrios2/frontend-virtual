@@ -8,6 +8,9 @@ import { env } from "./env.mjs"
 const config = withPlugins([[withBundleAnalyzer({ enabled: env.ANALYZE })]], {
   reactStrictMode: true,
   experimental: { instrumentationHook: true },
+  env: {
+    API_URL: process.env.REACT_APP_API_URL,
+  },
   rewrites() {
     return [
       { source: "/healthz", destination: "/api/health" },
