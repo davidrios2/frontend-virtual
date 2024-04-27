@@ -29,7 +29,7 @@ const Navbar = () => {
       </nav>
       <ul>
         {data?.map((aeropuertos)=>(
-          <li key={aeropuertos.nombre}>{aeropuertos.ciudad.nombre}</li>
+          <li key={aeropuertos.id}>{aeropuertos.ciudad.nombre}</li>
         ))}
       </ul>
     </div>
