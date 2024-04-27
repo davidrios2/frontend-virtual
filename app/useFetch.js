@@ -11,3 +11,14 @@ export function useFetch(url){
       
     return {data};
 }
+export function useFetch1(url){
+
+    const [data1, setData1] = useState(null);
+    useEffect(()=>{
+       fetch(url,{mode:'cors'})
+        .then(response =>response.json()).then((data1)=>setData1(data1));
+      
+      },[])
+      
+    return {data1};
+}
