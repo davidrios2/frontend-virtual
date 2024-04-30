@@ -1,10 +1,12 @@
 import React, { useState, useEffect } from "react";
 import AirportAutocomplete from "./AirportAutocomplete";
-import dataFlight from "../dataFlight.json";
 import FlightListData from "./FlightListData";
 import Modal from "./Modal";
+import {useFetch, useFetch1} from "../../app/useFetch";
 
 function FlightSearch() {
+  const {dataAeropuertos}=useFetch1("http://localhost:8080/api/aeropuertos/listar");
+  const {dataVuelos}=useFetch("http://localhost:8080/api/vuelos/listar");
   const [origin, setOrigin] = useState("");
   const [destination, setDestination] = useState("");
   const [departureDate, setDepartureDate] = useState("");
@@ -22,26 +24,26 @@ function FlightSearch() {
   const [oneWay, setOneway] = useState(false);
 
   useEffect(() => {
-    setAirports(dataFlight.aeropuertos);
-  }, []);
+    setAirports(dataAeropuertos);
+  }, [dataAeropuertos]);
 
   useEffect(() => {
-    setAvailableFlights(dataFlight.vuelos); // Establecer los vuelos disponibles desde el archivo JSON
-  }, []);
+    setAvailableFlights(dataVuelos); // Establecer los vuelos disponibles desde el archivo JSON
+  }, [dataVuelos]);
 
   const handleSearch = () => {
-    const validFlightsOneWay = dataFlight.vuelos.filter(
+    const validFlightsOneWay = dataVuelos.filter(
       (flight) =>
-        flight.originAirport == origin.split(" - ")[1] &&
-        flight.destinationAirport === destination.split(" - ")[1] &&
-        new Date(departureDate) <= new Date(flight.departureTime)
+        flight.origen.id == origin.split(" - ")[2] &&
+        flight.destino.id === destination.split(" - ")[2] &&
+        new Date(departureDate) <= new Date(flight.fechaSalida)
     );
 
-    const validFlightsRoundWay = dataFlight.vuelos.filter(
+    const validFlightsRoundWay = dataVuelos.filter(
       (flight) =>
-        flight.originAirport == destination.split(" - ")[1] &&
-        flight.destinationAirport === origin.split(" - ")[1] &&
-        new Date(returnDate) <= new Date(flight.departureTime)
+        flight.origen.id == destination.split(" - ")[2] &&
+        flight.destino.id === origin.split(" - ")[2] &&
+        new Date(returnDate) <= new Date(flight.fechaSalida)
     );
 
     if (
@@ -226,6 +228,7 @@ function FlightSearch() {
           </button>
         </div>
       )}
+      
     </div>
   );
 }

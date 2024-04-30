@@ -2,23 +2,23 @@ import { useEffect, useState } from 'react';
 
 export function useFetch(url){
 
-    const [data, setData] = useState(null);
+    const [dataVuelos, setDataVuelos] = useState(null);
     useEffect(()=>{
        fetch(url,{mode:'cors'})
-        .then(response =>response.json()).then((data)=>setData(data));
+        .then(response =>response.json()).then((dataVuelos)=>setDataVuelos(dataVuelos));
       
       },[])
       
-    return {data};
+    return {dataVuelos};
 }
 export function useFetch1(url){
 
-    const [data1, setData1] = useState(null);
+    const [dataAeropuertos, setDataAer] = useState(null);
     useEffect(()=>{
        fetch(url,{mode:'cors'})
-        .then(response =>response.json()).then((data1)=>setData1(data1));
+        .then(response =>response.json()).then((dataAeropuertos)=>setDataAer(dataAeropuertos));
       
       },[])
       
-    return {data1};
+    return {dataAeropuertos};
 }

@@ -1,9 +1,8 @@
 // components/Navbar.tsx
-import {useFetch, useFetch1} from "../../app/useFetch";
+
 
 const Navbar = () => {
-  const {data1}=useFetch1("http://localhost:8080/api/aeropuertos/listar");
-  const {data}=useFetch("http://localhost:8080/api/vuelos/listar");
+  
   return (
     <div>
       <nav className="bg-sky-200 text-black py-4">
@@ -28,16 +27,6 @@ const Navbar = () => {
           </div>
         </div>
       </nav>
-      <ul>
-        {data1?.map((airports)=>(
-          <li key={airports.id}>{airports.ciudad.nombre}</li>
-        ))}
-      </ul>
-      <ul>
-        {data?.map((flies)=>(
-          <li key={flies.id}>{flies.tipoVuelo}</li>
-        ))}
-      </ul>
     </div>
   );
 };

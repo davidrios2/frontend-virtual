@@ -7,8 +7,8 @@ function AirportAutocomplete({ value, onChange, airports }) {
     const inputValue = event.target.value;
     const filteredSuggestions = airports.filter(
       (airport) =>
-        airport.name.toLowerCase().includes(inputValue.toLowerCase()) ||
-        airport.CodeIATA.toLowerCase().includes(inputValue.toLowerCase())
+        airport.nombre.toLowerCase().includes(inputValue.toLowerCase()) ||
+        airport.id.toLowerCase().includes(inputValue.toLowerCase())
     );
     setSuggestions(filteredSuggestions);
     onChange(inputValue);
@@ -30,8 +30,8 @@ function AirportAutocomplete({ value, onChange, airports }) {
     
       <ul className="rounded-xl bg-gray-400 absolute">
         {suggestions.map((airport, index) => (
-          <li className="p-2 hover:bg-gray-300" key={index} onClick={() => handleSelect(airport.name+" - "+airport.CodeIATA)}>
-            {airport.name} - {airport.CodeIATA}
+          <li className="p-2 hover:bg-gray-300" key={index} onClick={() => handleSelect(airport.nombre+" - "+airport.id)}>
+            {airport.nombre} - {airport.id}
           </li>
         ))}
       </ul>
