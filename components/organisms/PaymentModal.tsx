@@ -1,5 +1,5 @@
 "use client"
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
 import TextField from "@mui/material/TextField";
 import Grid from "@mui/material/Grid";
 import Axios from "axios";
@@ -29,17 +29,31 @@ export function Modal({ paymentOption, payed, isOpen, onClose, openModal2, ...pr
   const [agree, setAgree] = useState("");
 
   const [creditCardData, setCreditCardData] = useState({
-    cardHolderName: "ARTURO F KENNEDY T",
-    cardType: "Mastercard",
-    cardNumber: "3514019106542676",
-    cvv: "333",
-    installments: "1",
-    expiryMonth: "12",
-    expiryYear: "2026",
-    identificationType: "C.C.",
-    identificationNumber: "101010",
+    cardHolderName: "",
+    cardType: "",
+    cardNumber: "",
+    cvv: "",
+    installments: "",
+    expiryMonth: "",
+    expiryYear: "",
+    identificationType: "",
+    identificationNumber: "",
+    agree: false
+  });
+
+  const [errors, setErrors] = useState({
+    cardHolderName: "",
+    cardType: "",
+    cardNumber: "",
+    cvv: "",
+    installments: "",
+    expiryMonth: "",
+    expiryYear: "",
+    identificationType: "",
+    identificationNumber: "",
     agree: true
   });
+
 
   const [isLoading, setIsLoading] = useState(false);
 
@@ -61,20 +75,21 @@ export function Modal({ paymentOption, payed, isOpen, onClose, openModal2, ...pr
     const inputName = e.target.value;
     setCardHolderName(inputName.slice(0, 40)); // Limitar a 40 caracteres
     setCreditCardData(prevState => ({ ...prevState, cardHolderName: inputName }));
-    setErrorMessage("");
+    setErrors(prevState => ({ ...prevState, cardNumber: "" }));
   };
 
   const handleCardNumberChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const inputCardNumber = e.target.value;
     setCardNumber(inputCardNumber);
     setCreditCardData(prevState => ({ ...prevState, cardNumber: inputCardNumber }));
-    setErrorMessage("");
+    setErrors(prevState => ({ ...prevState, cardNumber: "" }));
 
     // Expresión regular para validar que sean solo caracteres numéricos y máximo 16
     const regex = /^[0-9]*$/;
 
     if (inputCardNumber.length > 16 || !regex.test(inputCardNumber)) {
-      setErrorMessage("El número de tarjeta debe contener solo números y máximo 16 dígitos.");
+      let message = "El número de tarjeta debe contener solo números y máximo 16 dígitos."
+      setErrors(prevState => ({ ...prevState, cardNumber: message }));
     }
   };
 
@@ -82,26 +97,31 @@ export function Modal({ paymentOption, payed, isOpen, onClose, openModal2, ...pr
     const inputCvv = e.target.value;
     setCvv(inputCvv);
     setCreditCardData(prevState => ({ ...prevState, cvv: inputCvv }));
-    setErrorMessage("");
+    setErrors(prevState => ({ ...prevState, cvv: "" }));
 
     // Expresión regular para validar que sean como máximo 3 dígitos numéricos
     const regex = /^\d{0,3}$/;
 
     if (!regex.test(inputCvv)) {
-      setErrorMessage("El CVC debe contener como máximo 3 dígitos numéricos.");
+      let message = "Máximo 3 dígitos numéricos."
+      setErrors(prevState => ({ ...prevState, cvv: message }));
     }
   };
 
   const handleExpiryMonthChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const inputMonth = e.target.value;
-    setCreditCardData(prevState => ({ ...prevState, expiryMonth: inputMonth }));
-    setExpiryMonth(inputMonth);
+    const numericValue = inputMonth.replace(/[^0-9]/g, "");
+    setCreditCardData(prevState => ({ ...prevState, expiryMonth: numericValue }));
+    setExpiryMonth(numericValue);
   };
 
   const handleExpiryYearChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const inputYear = e.target.value;
-    setCreditCardData(prevState => ({ ...prevState, expiryYear: inputYear }));
-    setExpiryYear(inputYear);
+
+    const numericValue = inputYear.replace(/[^0-9]/g, "");
+    console.log("numericValue", numericValue);
+    setCreditCardData(prevState => ({ ...prevState, expiryYear: numericValue }));
+    setExpiryYear(numericValue);
   };
 
   const handleIdentificationTypeChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
@@ -115,12 +135,13 @@ export function Modal({ paymentOption, payed, isOpen, onClose, openModal2, ...pr
     if (/^\d*$/.test(inputValue)) {
       setIdentificationNumber(inputValue);
       setCreditCardData(prevState => ({ ...prevState, identificationNumber: inputValue }));
-      setErrorMessage('');
+      setErrors(prevState => ({ ...prevState, identificationNumber: "" }));
     }
 
     else {
       // Si el valor no es un número, muestra un mensaje de error
-      setErrorMessage('El número de identificación solo debe contener números');
+      let message = "El número de identificación solo debe contener números";
+      setErrors(prevState => ({ ...prevState, identificationNumber: message }));
     }
   };
 
@@ -141,14 +162,14 @@ export function Modal({ paymentOption, payed, isOpen, onClose, openModal2, ...pr
   const handleSocialReasonChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const inputValue = e.target.value;
     setSocialReason(inputValue);
-    setErrorMessage("");
+    setErrors(prevState => ({ ...prevState, cardNumber: "" }));
     // Add validation for social reason if needed
   };
 
   const handleEmailChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const inputValue = e.target.value;
     setEmail(inputValue);
-    setErrorMessage("");
+    setErrors(prevState => ({ ...prevState, cardNumber: "" }));
     // Add validation for email if needed
   };
 
@@ -218,8 +239,8 @@ export function Modal({ paymentOption, payed, isOpen, onClose, openModal2, ...pr
                       variant="outlined"
                       required
                       label="Nombre del propietario de la tarjeta"
-                      error={errorMessage !== ""}
-                      helperText={errorMessage}
+                      error={errors.cardHolderName !== ""}
+                      helperText={errors.cardHolderName}
                       InputLabelProps={{
                         shrink: true,
                       }}
@@ -239,24 +260,13 @@ export function Modal({ paymentOption, payed, isOpen, onClose, openModal2, ...pr
                       type="number"
                       onChange={handleCardNumberChange}
                       required
+                      error={errors.cardNumber !== ""}
+                      helperText={errors.cardNumber}
                       InputLabelProps={{
                         shrink: true,
                       }}
                     />
 
-
-                    {/* <label htmlFor="cardNumber" className="block font-bold mb-2">
-                      Número de la tarjeta *
-                    </label>
-                    <input
-                      className={`mb-4 w-full rounded-md border border-gray-300 px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500 ${errorMessage ? "border-red-500" : ""
-                        }`}
-                      id="cardNumber"
-                      type="text"
-                      value={cardNumber}
-                      onChange={handleCardNumberChange}
-                      required
-                    /> */}
                   </Grid>
 
                   {/* Nro cvc */}
@@ -271,22 +281,13 @@ export function Modal({ paymentOption, payed, isOpen, onClose, openModal2, ...pr
                       type="number"
                       onChange={handleCvvChange}
                       required
+                      error={errors.cvv !== ""}
+                      helperText={errors.cvv}
                       InputLabelProps={{
                         shrink: true,
                       }}
                     />
 
-                    {/* <label htmlFor="cvvInput" className="block font-bold mb-2">
-                      Código CCV *
-                    </label>
-                    <input
-                      type="text"
-                      id="cvvInput"
-                      value={cvv}
-                      onChange={handleCvvChange}
-                      className="border border-gray-300 rounded-md px-4 py-2 w-full"
-                      required
-                    /> */}
                   </Grid>
 
                   {/* Fecha vencimiento */}
@@ -299,9 +300,8 @@ export function Modal({ paymentOption, payed, isOpen, onClose, openModal2, ...pr
                         id="expiryMonth"
                         label="MM"
                         variant="outlined"
-
+                        value={expiryMonth || ""}
                         inputProps={{ maxLength: 2, style: { padding: 8 } }}
-                        type="number"
                         onChange={handleExpiryMonthChange}
                         required
                         InputLabelProps={{
@@ -312,10 +312,9 @@ export function Modal({ paymentOption, payed, isOpen, onClose, openModal2, ...pr
                         id="expiryYear"
                         label="YYYY"
                         variant="outlined"
-
+                        value={expiryYear || ""}
                         inputProps={{ maxLength: 4, style: { padding: 8 } }}
-                        type="number"
-                        onChange={handleExpiryMonthChange}
+                        onChange={handleExpiryYearChange}
                         required
                         InputLabelProps={{
                           shrink: true,
@@ -364,24 +363,13 @@ export function Modal({ paymentOption, payed, isOpen, onClose, openModal2, ...pr
                       variant="outlined"
                       required
                       label="Número de identificación"
-                      error={errorMessage !== ""}
-                      helperText={errorMessage}
+                      error={errors.identificationNumber !== ""}
+                      helperText={errors.identificationNumber}
                       InputLabelProps={{
                         shrink: true,
                       }}
                     />
 
-                    {/* <label htmlFor="identificationNumber" className="block font-bold mb-2">
-                      Número de identificación *
-                    </label>
-                    <input
-                      type="text"
-                      id="identificationNumber"
-                      value={identificationNumber}
-                      onChange={handleIdentificationNumberChange}
-                      className="border border-gray-300 rounded-md px-4 py-2 w-full"
-                      required
-                    /> */}
                   </Grid>
 
                 </Grid>
@@ -441,7 +429,6 @@ export function Modal({ paymentOption, payed, isOpen, onClose, openModal2, ...pr
         <div style={{ position: "fixed", top: 0, left: 0, right: 0, bottom: 0, backgroundColor: "rgba(0, 0, 0, 0.5)" }}>
           <div style={{ background: "white", position: "absolute", top: "50%", left: "50%", transform: "translate(-50%, -50%)" }}>
 
-
             <div className="rounded-lg bg-white shadow-md py-4 px-12" style={{ width: "940px" }}>
 
               <h2 className="mb-6 text-left text-2xl font-bold bg-custom-blue" style={{ color: "#2196F3" }}>Tarjeta de crédito</h2>
@@ -478,7 +465,7 @@ export function Modal({ paymentOption, payed, isOpen, onClose, openModal2, ...pr
                       disablePortal
                       id="cardType"
                       options={["Visa", "Mastercard", "American Express"]}
-                      value={creditCardData.cardType}
+                      // value={creditCardData.cardType}
                       onInputChange={(event, newInputValue) => {
                         setCardType(newInputValue);
                       }}
@@ -543,7 +530,7 @@ export function Modal({ paymentOption, payed, isOpen, onClose, openModal2, ...pr
                       disablePortal
                       id="installments"
                       options={Array.from({ length: 24 }, (v, i) => (i + 1).toString())}
-                      value={creditCardData.installments}
+                      // value={creditCardData.installments}
                       onInputChange={(event, newInputValue) => {
                         setIdentificationType(newInputValue);
                       }}
@@ -603,7 +590,7 @@ export function Modal({ paymentOption, payed, isOpen, onClose, openModal2, ...pr
                       disablePortal
                       id="identificationType"
                       options={["C.C.", "N.I.T.", "C.E"]}
-                      value={creditCardData.identificationType}
+                      // value={creditCardData.identificationType}
                       onInputChange={(event, newInputValue) => {
                         setIdentificationType(newInputValue);
                       }}
@@ -672,7 +659,7 @@ export function Modal({ paymentOption, payed, isOpen, onClose, openModal2, ...pr
 
                 <div className="flex justify-center items-center flex-col fle mt-6">
 
-                  {errorMessage && <div className="mb-4 text-red-600">{errorMessage}</div>}
+                  {!isLoading && errorMessage && <div className="mb-4 text-red-600">{errorMessage}</div>}
                   {isLoading && <div className="mb-4">Cargando...</div>}
 
                   <div>
@@ -696,9 +683,6 @@ export function Modal({ paymentOption, payed, isOpen, onClose, openModal2, ...pr
               </form>
             </div>
 
-
-
-
           </div>
         </div>
       );
@@ -708,7 +692,7 @@ export function Modal({ paymentOption, payed, isOpen, onClose, openModal2, ...pr
         <div style={{ position: "fixed", top: 0, left: 0, right: 0, bottom: 0, backgroundColor: "rgba(0, 0, 0, 0.5)" }}>
           <div style={{ background: "white", position: "absolute", top: "50%", left: "50%", transform: "translate(-50%, -50%)" }}>
 
-            <div className="rounded-lg bg-white p-8 shadow-md">
+            <div className="rounded-lg bg-white shadow-md py-4 px-12" style={{ width: "940px" }}>
 
               <h2 className="mb-6 text-left text-2xl font-bold bg-custom-blue" style={{ color: "#2196F3" }}>PSE</h2>
               <h2 className="mb-4 text-sm text-gray-600">Por favor seleccione el banco desde el cual desea realizar el pago</h2>

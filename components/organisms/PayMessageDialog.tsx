@@ -9,9 +9,10 @@ interface ModalProps extends React.ButtonHTMLAttributes<HTMLAnchorElement> {
   wasPayed: boolean;
   isOpen: boolean;
   onClose: () => void;
+  eyHola: () => void;
 }
 
-export function MessageDialog({ wasPayed, isOpen, onClose, ...props }: ModalProps) {
+export function MessageDialog({ wasPayed, isOpen, onClose, eyHola, ...props }: ModalProps) {
   if (!isOpen) return null;
 
 
@@ -104,10 +105,13 @@ export function MessageDialog({ wasPayed, isOpen, onClose, ...props }: ModalProp
     // Add validation for email if needed
   };
 
+  function name() {
+    onClose()
+    eyHola()
+  }
 
 
-
-  if (!wasPayed) {
+  if (wasPayed) {
 
     return (
       <div style={{ position: "fixed", top: 0, left: 0, right: 0, bottom: 0, backgroundColor: "rgba(0, 0, 0, 0.5)" }}>
@@ -146,7 +150,7 @@ export function MessageDialog({ wasPayed, isOpen, onClose, ...props }: ModalProp
             <h2 className="mt-4 mb-8 text-left text-lg bg-custom-blue text-gray-600">EL PAGO FUE REALIZADO CON EXITO!</h2>
 
             <button
-              onClick={onClose}
+              onClick={name}
               className="focus:shadow-outline rounded-md bg-blue-600 px-4 py-2 font-bold text-white hover:bg-blue-700 focus:outline-none"
               style={{ backgroundColor: "#2196F3" }}
             >
@@ -157,7 +161,7 @@ export function MessageDialog({ wasPayed, isOpen, onClose, ...props }: ModalProp
 
 
         </div>
-      </div>
+      </div >
     );
 
 

@@ -33,6 +33,10 @@ export default function Web() {
   const payed = (value: boolean) => setWasReservationPayed(value);
 
 
+  const [hola, setHola] = useState(false);
+  const eyHola = () => { setHola(true); setSelectedPaymentOption("") };
+
+  
   const handleStartPayment = () => {
     if (!selectedPaymentOption) {
       setErrorMessage("Debes seleccionar un método de pago.");
@@ -42,6 +46,7 @@ export default function Web() {
       return;
     }
     openModal()
+
   };
 
   return (
@@ -65,7 +70,7 @@ export default function Web() {
 
           <div className="mb-2 flex justify-between">
             <p className="text-base font-bold" style={{ color: "#2196F3" }}>Total</p>
-            <p className="text-base font-bold text-black">${totalToPay.toLocaleString()}</p>
+            <p className="text-base font-bold text-black">${!hola ? totalToPay.toLocaleString() : "0"}</p>
           </div>
 
         </div>
@@ -124,16 +129,34 @@ export default function Web() {
           )}
         </div>
         <div className="flex justify-center">
-          <button
-            onClick={handleStartPayment}
-            type="submit"
-            className="bg-blue-500 text-white rounded-md px-4 py-2 hover:bg-blue-600 transition-colors duration-300"
-            style={{ backgroundColor: "#2196F3" }}
-          >
-            Iniciar Pago
-          </button>
+          {
+            hola
+              ?
+              <button
+                onClick={handleStartPayment}
+                type="submit"
+                className="bg-blue-500 text-white rounded-md px-4 py-2 hover:bg-blue-600 transition-colors duration-300"
+                style={{ backgroundColor: "#2196F3" }}
+                disabled
+              >
+                Iniciar Pago
+              </button>
+
+              :
+
+              <button
+                onClick={handleStartPayment}
+                type="submit"
+                className="bg-blue-500 text-white rounded-md px-4 py-2 hover:bg-blue-600 transition-colors duration-300"
+                style={{ backgroundColor: "#2196F3" }}
+              >
+                Iniciar Pago
+              </button>
+          }
+
+
           <Modal paymentOption={selectedPaymentOption} payed={payed} isOpen={isModalOpen} onClose={closeModal} openModal2={openModal2} />
-          <MessageDialog wasPayed={wasReservationPayed} isOpen={isModal2Open} onClose={closeModal2} />
+          <MessageDialog wasPayed={wasReservationPayed} isOpen={isModal2Open} onClose={closeModal2} eyHola={eyHola} />
         </div>
       </div>
     </div>
