@@ -1,10 +1,23 @@
 "use client"
 
+import { signOut, useSession } from "next-auth/react"
 import { SubmitHandler, useForm } from "react-hook-form"
 import Link from "next/link"
 import { Grid, MenuItem, TextField } from "@mui/material"
 import { TelephonePrefixes } from "components/Forms/TelephonePrefixes"
+import { getUserById, updateUser } from "database/dbUser"
 import { emailValidations } from "utils"
+import jwt from "jsonwebtoken"
+import { GetUserReponse } from "interfaces"
+import { JWTPayload } from "interfaces/jwt.interface"
+import { useEffect, useState } from "react"
+import * as React from "react"
+import Button from "@mui/material/Button"
+import Dialog from "@mui/material/Dialog"
+import DialogActions from "@mui/material/DialogActions"
+import DialogContent from "@mui/material/DialogContent"
+import DialogContentText from "@mui/material/DialogContentText"
+import DialogTitle from "@mui/material/DialogTitle"
 
 type FormInputs = {
   name: string
@@ -15,24 +28,98 @@ type FormInputs = {
 }
 
 export default function UpdateForm() {
+  const { data: session, status } = useSession()
+  const [userData, setUserData] = useState<GetUserReponse | null>(null)
+  const [emailChanged, setEmailChanged] = useState(false)
+  const [formData, setFormData] = useState<FormInputs | null>(null)
+
+  const handleClickOpen = (data: FormInputs) => {
+    setFormData(data)
+    setOpen(true)
+  }
+
+  const [open, setOpen] = useState(false)
+
+  useEffect(() => {
+    if (status === "authenticated") {
+      const token: string = session.user.token
+      const { userId } = jwt.decode(token as string) as JWTPayload
+      const fetchUserData = async () => {
+        const userData = await getUserById(userId, token)
+        setUserData(userData)
+      }
+      fetchUserData()
+    }
+  }, [session])
+
+  const handleClose = async (agree: boolean) => {
+    setOpen(false)
+    if (agree && formData && status === "authenticated") {
+      const token: string = session.user.token
+      const { userId } = jwt.decode(token as string) as JWTPayload
+      const updates: Partial<GetUserReponse> = {
+        userName: formData.name,
+        userLastname: formData.lastName,
+        userEmail: formData.email,
+        userPhoneNumber: `${formData.telephonePrefix} ${formData.telephoneNumber}`,
+      }
+      const updatedUser = await updateUser(userId, token, updates)
+      console.log(updatedUser)
+      if (formData.email !== session.user.email) {
+        signOut()
+      }
+    }
+  }
+
   const {
     register,
     handleSubmit,
     formState: { errors },
-  } = useForm<FormInputs>()
+  } = useForm<FormInputs>({
+    defaultValues: userData
+      ? {
+          name: userData.userName,
+          lastName: userData.userLastname,
+          email: userData.userEmail,
+          telephonePrefix: userData.userPhoneNumber.split(" ")[0],
+          telephoneNumber: userData.userPhoneNumber.split(" ")[1],
+        }
+      : {},
+  })
 
   const onSubmit: SubmitHandler<FormInputs> = async (data) => {
-    console.log(data)
+    if (status === "authenticated") {
+      const token: string = session.user.token
+      const { userId } = jwt.decode(token as string) as JWTPayload
+      const updates: Partial<GetUserReponse> = {
+        userName: data.name,
+        userLastname: data.lastName,
+        userEmail: data.email,
+        userPhoneNumber: `${data.telephonePrefix} ${data.telephoneNumber}`,
+      }
+
+      if (data.email !== session.user.email) {
+        handleClickOpen(data)
+      } else {
+        const updatedUser = await updateUser(userId, token, updates)
+        console.log(updatedUser)
+      }
+    }
+  }
+
+  if (status === "loading" || !userData) {
+    return <> </>
   }
 
   return (
     <>
       <form onSubmit={handleSubmit(onSubmit)}>
-        <Grid container={true} spacing={2} marginTop={'5px'}>
+        <Grid container={true} spacing={2} marginTop={"5px"}>
           <Grid item xs={12} md={6} lg={6}>
             <TextField
               label="Nombres"
               variant="outlined"
+              defaultValue={userData?.userName}
               fullWidth
               {...register("name", {
                 required: "Este campo es requerido",
@@ -46,6 +133,7 @@ export default function UpdateForm() {
             <TextField
               label="Apellidos"
               variant="outlined"
+              defaultValue={userData?.userLastname}
               fullWidth
               {...register("lastName", {
                 required: "Este campo es requerido",
@@ -59,6 +147,7 @@ export default function UpdateForm() {
             <TextField
               label="Correo electrónico"
               variant="outlined"
+              defaultValue={userData?.userEmail}
               fullWidth
               {...register("email", {
                 required: "Este campo es requerido",
@@ -74,7 +163,7 @@ export default function UpdateForm() {
               select
               variant="outlined"
               fullWidth
-              defaultValue="+57"
+              defaultValue={userData?.userPhoneNumber.split(" ")[0]}
               style={{ display: "flex", flexDirection: "row", alignItems: "center" }}
               {...register("telephonePrefix", {
                 required: "Este campo es requerido",
@@ -93,6 +182,7 @@ export default function UpdateForm() {
             <TextField
               label="Número de celular"
               variant="outlined"
+              defaultValue={userData?.userPhoneNumber.split(" ")[1]}
               fullWidth
               {...register("telephoneNumber", {
                 required: "Este campo es requerido",
@@ -119,6 +209,26 @@ export default function UpdateForm() {
           </button>
         </Link>
       </form>
+
+      <Dialog
+        open={open}
+        onClose={handleClose}
+        aria-labelledby="alert-dialog-title"
+        aria-describedby="alert-dialog-description"
+      >
+        <DialogTitle id="alert-dialog-title">{"¿Cambiar correo electrónico?"}</DialogTitle>
+        <DialogContent>
+          <DialogContentText id="alert-dialog-description">
+            Si cambias tu correo electrónico, se cerrará tu sesión y deberás iniciar sesión de nuevo.
+          </DialogContentText>
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={() => handleClose(false)}>Cancelar</Button>
+          <Button onClick={() => handleClose(true)} autoFocus>
+            Aceptar
+          </Button>
+        </DialogActions>
+      </Dialog>
     </>
   )
 }
