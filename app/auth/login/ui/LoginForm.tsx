@@ -8,13 +8,23 @@ import { signIn } from "next-auth/react";
 import { Checkbox, CircularProgress, Grid, TextField, Typography } from "@mui/material";
 import { emailValidations } from 'utils';
 import { LogginInterface } from "interfaces/login.interface";
+import PasswordField from "components/ui/PasswordField";
 
 export const LoginForm = () => {
 
    const router = useRouter()
    const [error, setError] = useState("");
    const [isLoading, setIsLoading] = useState(false);
+   const [showPassword, setShowPassword] = useState(false);
    const { register, handleSubmit, formState: { errors } } = useForm<LogginInterface>();
+
+   const handleClickShowPassword = () => {
+      setShowPassword(!showPassword);
+   }
+
+   const handleMouseDownPassword = (event: React.MouseEvent<HTMLButtonElement>) => {
+      event.preventDefault()
+   }
 
    const onSubmit: SubmitHandler<LogginInterface> = async (data) => {
       setError("");
@@ -61,16 +71,15 @@ export const LoginForm = () => {
                </Grid>
 
                <Grid item xs={12}>
-                  <TextField
+                  <PasswordField
                      label="Contraseña"
-                     variant="outlined"
-                     fullWidth
-                     type='password'
-                     {...register('userPassword', {
-                        required: 'Este campo es requerido',
+                     register={register("userPassword", {
+                        required: "Este campo es requerido",
                      })}
-                     error={!!errors.userPassword}
-                     helperText={errors.userPassword?.message}
+                     errors={errors.userPassword}
+                     showPassword={showPassword}
+                     handleClickShowPassword={() => handleClickShowPassword()}
+                     handleMouseDownPassword={handleMouseDownPassword}
                   />
                </Grid>
 

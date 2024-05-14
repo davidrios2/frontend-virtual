@@ -1,9 +1,8 @@
-import Box from "@mui/material/Box"
+import React from "react";
 import UpdateForm from "./ui/UpdateForm"
-import ProfileLayout from "../layout"
 import { Titles } from "components/ui/Titles"
 
-function EditProfile({ children }: { children: React.ReactNode }) {
+const EditProfile: React.FC = () => {
   return (
     <>
       <Titles title="Actualizar datos" subtitle="¡Comienza a editar el perfil de tu cuenta de Singapur Airlines!" />
@@ -12,4 +11,5 @@ function EditProfile({ children }: { children: React.ReactNode }) {
   )
 }
 
-export default EditProfile
+export default EditProfile; 
+

@@ -202,7 +202,10 @@ export const RegisterForm = () => {
         <Grid item xs={12} className="flex items-center">
           <Checkbox required />
           <Typography variant="body2" color="textSecondary" className="mb-2">
-            Autorizo que mis datos sean tratados de acuerdo a la Política de Privacidad.
+            {'Autorizo que mis datos sean tratados de acuerdo a la '}
+            <Link href="/auth/privacy-policy" className="underline" style={{textDecorationColor:'blue', color:'blue'}} >
+              Política de Privacidad.
+            </Link>
           </Typography>
         </Grid>
       </Grid>
