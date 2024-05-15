@@ -1,18 +1,18 @@
 "use client"
 
 import { Grid } from "@mui/material"
+import MuiAlert from "@mui/material/Alert"
+import Snackbar from "@mui/material/Snackbar"
+import jwt from "jsonwebtoken"
+import { useRouter } from "next/navigation"
+import { useSession } from "next-auth/react"
 import React, { useState } from "react"
+import { useEffect } from "react"
 import { SubmitHandler, useForm } from "react-hook-form"
+import { updatePassword } from "database/dbUser"
+import { JWTPayload } from "interfaces/jwt.interface"
 import { passwordValidations } from "utils"
 import PasswordField from "../../../../../../components/ui/PasswordField"
-import { useSession } from "next-auth/react"
-import { JWTPayload } from "interfaces/jwt.interface"
-import jwt from "jsonwebtoken"
-import { updatePassword } from "database/dbUser"
-import Snackbar from "@mui/material/Snackbar"
-import MuiAlert from "@mui/material/Alert"
-import { useEffect } from "react"
-import { useRouter } from "next/navigation"
 
 type FormInputs = {
   currentPassword: string
@@ -93,6 +93,7 @@ export default function UpdatePasswordForm() {
               label="Contraseña actual"
               register={register("currentPassword", {
                 required: "Este campo es requerido",
+                validate: passwordValidations.isPassword,
               })}
               errors={errors.currentPassword}
               showPassword={showPassword.current}
@@ -105,6 +106,15 @@ export default function UpdatePasswordForm() {
               label="Nueva contraseña"
               register={register("newPassword", {
                 required: "Este campo es requerido",
+                validate: (value) => {
+                  if (passwordValidations.isPassword(value)) {
+                    return "La contraseña debe incluir al menos una letra mayúscula, una letra minúscula, un número y un carácter especial, y su extensión debe ser entre 8 y 25 caracteres."
+                  }
+                  if (value === currentPassword) {
+                    return "La nueva contraseña debe ser diferente de la contraseña actual"
+                  }
+                  return true
+                },
               })}
               errors={errors.newPassword}
               showPassword={showPassword.new}
@@ -118,6 +128,9 @@ export default function UpdatePasswordForm() {
               register={register("confirmPassword", {
                 required: "Este campo es requerido",
                 validate: (value) => {
+                  if (passwordValidations.isPassword(value)) {
+                    return "La contraseña debe incluir al menos una letra mayúscula, una letra minúscula, un número y un carácter especial, y su extensión debe ser entre 8 y 25 caracteres."
+                  }
                   if (value !== newPassword) {
                     return "Las contraseñas no coinciden"
                   }

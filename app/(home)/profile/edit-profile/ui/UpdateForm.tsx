@@ -122,6 +122,7 @@ export default function UpdateForm() {
               fullWidth
               {...register("name", {
                 required: "Este campo es requerido",
+
                 pattern: { value: /^[a-zA-Z\s]*$/, message: "El nombre proporcionado no es válido" },
               })}
               error={!!errors.name}
