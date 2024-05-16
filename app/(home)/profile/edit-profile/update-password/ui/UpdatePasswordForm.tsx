@@ -93,7 +93,7 @@ export default function UpdatePasswordForm() {
               label="Contraseña actual"
               register={register("currentPassword", {
                 required: "Este campo es requerido",
-                validate: passwordValidations.isPassword,
+                
               })}
               errors={errors.currentPassword}
               showPassword={showPassword.current}

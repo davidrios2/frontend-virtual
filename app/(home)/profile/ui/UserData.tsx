@@ -1,26 +1,17 @@
 "use client"
 
-import { useEffect, useState } from "react"
+import { Grid, MenuItem, TextField } from "@mui/material"
+import jwt from "jsonwebtoken"
 import Link from "next/link"
 import { useSession } from "next-auth/react"
-import { Grid, IconButton, InputAdornment, MenuItem, TextField } from "@mui/material"
-import Visibility from "@mui/icons-material/Visibility"
-import VisibilityOff from "@mui/icons-material/VisibilityOff"
-import jwt from "jsonwebtoken"
+import { useEffect, useState } from "react"
 import { TelephonePrefixes } from "components/Forms/TelephonePrefixes"
-import { JWTPayload } from "interfaces/jwt.interface"
-import { GetUserReponse } from "interfaces"
 import { getUserById } from "database/dbUser"
+import { GetUserReponse } from "interfaces"
+import { JWTPayload } from "interfaces/jwt.interface"
 
 export default function UserData() {
   const [userData, setUserData] = useState<GetUserReponse | null>(null)
-  const [showPassword, setShowPassword] = useState(false)
-
-  const handleClickShowPassword = () => setShowPassword((show) => !show)
-
-  const handleMouseDownPassword = (event: React.MouseEvent<HTMLButtonElement>) => {
-    event.preventDefault()
-  }
 
   const { data: session, status } = useSession()
 
@@ -71,31 +62,6 @@ export default function UserData() {
             fullWidth
             defaultValue={userData?.userEmail}
             InputProps={{ readOnly: true }}
-          />
-        </Grid>
-        <Grid item xs={12} md={12} lg={12}>
-          <TextField
-            name="password"
-            label="Contraseña actual"
-            variant="outlined"
-            fullWidth
-            defaultValue={userData?.password}
-            type={showPassword ? "text" : "password"}
-            InputProps={{
-              endAdornment: (
-                <InputAdornment position="end">
-                  <IconButton
-                    aria-label="toggle password visibility"
-                    onClick={handleClickShowPassword}
-                    onMouseDown={handleMouseDownPassword}
-                    edge="end"
-                  >
-                    {showPassword ? <Visibility /> : <VisibilityOff />}
-                  </IconButton>
-                </InputAdornment>
-              ),
-              readOnly: true,
-            }}
           />
         </Grid>
         <Grid item xs={2} md={3} lg={3}>
