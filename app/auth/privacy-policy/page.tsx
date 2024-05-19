@@ -70,7 +70,7 @@ export default function PrivacyPolicyPage() {
             </Typography>
          </CardContent>
          <CardActions>
-            <Link href="/auth/new-account" className='w-full' >
+            <Link href="/auth/new-account" target='_top' className='w-full' >
                <button className="mb-5 w-full h-10 items-center justify-center rounded bg-blue-500 text-center text-white">
                   Volver a Registro
                </button>

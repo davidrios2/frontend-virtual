@@ -203,7 +203,7 @@ export const RegisterForm = () => {
           <Checkbox required />
           <Typography variant="body2" color="textSecondary" className="mb-2">
             {'Autorizo que mis datos sean tratados de acuerdo a la '}
-            <Link href="/auth/privacy-policy" className="underline" style={{textDecorationColor:'blue', color:'blue'}} >
+            <Link href="/auth/privacy-policy" target='_blank' className="underline" style={{textDecorationColor:'blue', color:'blue'}} >
               Política de Privacidad.
             </Link>
           </Typography>
