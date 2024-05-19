@@ -8,7 +8,7 @@ export function SocialMediaLogin() {
             </div>
             <br></br>
             {/* <div className="flex justify-center">
-                <LoginFaceBookBtn />
+                <LoginFaceBookBtn /> // Disable because FB needs further set up
             </div> */}
         </div>
     )
