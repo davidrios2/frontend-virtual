@@ -1,6 +1,9 @@
+
+import bcrypt from 'bcryptjs';
 import NextAuth from "next-auth";
 import CredentialsProvider from "next-auth/providers/credentials";
-import bcrypt from 'bcryptjs';
+import FacebookProvider from "next-auth/providers/facebook";
+import GoogleProvider from "next-auth/providers/google";
 
 //TODO: Eliminar
 const users = [
@@ -46,6 +49,15 @@ const handler = NextAuth({
             return userFound;
          },
       }),
+      GoogleProvider({
+         clientId: process.env.GOOGLE_ID!,
+         clientSecret: process.env.GOOGLE_SECRET!,
+      }
+      ),
+      FacebookProvider({
+         clientId: process.env.FACEBOOK_ID!,
+         clientSecret: process.env.FACEBOOK_SECRET!,
+      })
    ],
    pages: {
       signIn: "/uth/login",
@@ -63,7 +75,25 @@ const handler = NextAuth({
          session.user = token.user as any;
          return session;
       },
-   },
-})
+      async signIn({ user, account, profile, email, credentials }) {
+         const isAllowedToSignIn = true
+         if (isAllowedToSignIn) {
+            return true
+         } else {
+            // Return false to display a default error message
+            return false
+            // Or you can return a URL to redirect to:
+            // return '/unauthorized'
+         }
+      }
+      // async signIn({ account, profile }) {
+      //    if (account?.provider === "google") {
+      //      return profile?.email && profile?.email.endsWith("@example.com")
+      //    }
+      //    return true // Do different verification for other providers that don't have `email_verified`
+      //  },
+   }
+},
+)
 
 export { handler as GET, handler as POST };
