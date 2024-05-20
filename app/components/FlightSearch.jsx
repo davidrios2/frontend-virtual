@@ -102,6 +102,7 @@ function FlightSearch() {
                 value="oneWay"
                 checked={!tripType}
                 onChange={() => setTripType(false)}
+                //hola
               />
               <label htmlFor="oneWay" className="ml-2 ">
                 One Way
