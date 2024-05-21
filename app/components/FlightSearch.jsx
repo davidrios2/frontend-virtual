@@ -1,236 +1,301 @@
-import React, { useState, useEffect } from "react";
+import React, { useEffect, useState } from "react";
+import AdultChildrenInput from "./AdultChildrenInput";
 import AirportAutocomplete from "./AirportAutocomplete";
 import FlightListData from "./FlightListData";
+import { searchFlights } from "./FlightUtils";
 import Modal from "./Modal";
 import {useFetch, useFetch1} from "../../app/useFetch";
 
+
 function FlightSearch() {
+  // Estado para almacenar los datos del formulario y la interfaz de usuario
   const {dataAeropuertos}=useFetch1("http://localhost:8080/api/aeropuertos/listar");
   const {dataVuelos}=useFetch("http://localhost:8080/api/vuelos/listar");
-  const [origin, setOrigin] = useState("");
-  const [destination, setDestination] = useState("");
-  const [departureDate, setDepartureDate] = useState("");
-  const [returnDate, setReturnDate] = useState("");
-  const [adults, setAdults] = useState(1);
-  const [children, setChildren] = useState(0);
-  const [selectedOutboundFlight, setSelectedOutboundFlight] = useState(null);
-  const [selectedReturnFlight, setSelectedReturnFlight] = useState(null);
-  const [tripType, setTripType] = useState(true);
-  const [showModal, setShowModal] = useState(false);
-  const [showFlights, setShowFlights] = useState(false);
-  const [availableFlights, setAvailableFlights] = useState([]);
-  const [availableFlightsRound, setAvailableFlightRounds] = useState([]);
-  const [airport, setAirports] = useState(false);
-  const [oneWay, setOneway] = useState(false);
+  const [formData, setFormData] = useState({
+    origin: "", // Aeropuerto de origen
+    destination: "", // Aeropuerto de destino
+    departureDate: "", // Fecha de salida
+    returnDate: "", // Fecha de regreso (solo para vuelos de ida y vuelta)
+    adults: 1, // Número de adultos
+    children: 0, // Número de niños
+    selectedOutboundFlight: null, // Vuelo de ida seleccionado
+    selectedReturnFlight: null, // Vuelo de regreso seleccionado (solo para vuelos de ida y vuelta)
+    isRoundTrip: true, // Indica si el usuario ha seleccionado vuelo de ida y vuelta
+    showModal: false, // Indica si se debe mostrar el modal de confirmación
+    showFlights: false, // Indica si se deben mostrar los vuelos disponibles
+    availableFlights: [], // Lista de vuelos disponibles de ida
+    availableFlightsRound: [], // Lista de vuelos disponibles de vuelta (solo para vuelos de ida y vuelta)
+    airports: [], // Lista de aeropuertos para la autocompletación
+    isOneWay: false, // Indica si el usuario ha seleccionado solo vuelo de ida
+  });
 
+  // Cargar los aeropuertos disponibles al montar el componente
   useEffect(() => {
-    setAirports(dataAeropuertos);
+    setFormData((prevData) => ({
+      ...prevData,
+      airports: dataAeropuertos,
+    }));
   }, [dataAeropuertos]);
 
+  // Cargar los vuelos disponibles al montar el componente
   useEffect(() => {
-    setAvailableFlights(dataVuelos); // Establecer los vuelos disponibles desde el archivo JSON
+    setFormData((prevData) => ({
+      ...prevData,
+      availableFlights: dataVuelos,
+    }));
   }, [dataVuelos]);
 
+  // Función para buscar vuelos según los criterios seleccionados por el usuario
   const handleSearch = () => {
-    const validFlightsOneWay = dataVuelos.filter(
-      (flight) =>
-        flight.origen.id == origin.split(" - ")[2] &&
-        flight.destino.id === destination.split(" - ")[2] &&
-        new Date(departureDate) <= new Date(flight.fechaSalida)
+    const {
+      availableFlights,
+      origin,
+      destination,
+      departureDate,
+      returnDate,
+      isRoundTrip,
+    } = formData;
+  
+    const { validFlightsOneWay, validFlightsRoundWay } = searchFlights(
+      availableFlights,
+      origin,
+      destination,
+      departureDate,
+      returnDate
     );
-
-    const validFlightsRoundWay = dataVuelos.filter(
-      (flight) =>
-        flight.origen.id == destination.split(" - ")[2] &&
-        flight.destino.id === origin.split(" - ")[2] &&
-        new Date(returnDate) <= new Date(flight.fechaSalida)
-    );
-
+    
     if (
       origin &&
       destination &&
       departureDate &&
       validFlightsOneWay.length > 0
     ) {
-      setAvailableFlights(validFlightsOneWay);
-      setAvailableFlightRounds(validFlightsRoundWay);
-      setShowFlights(true);
-      setOneway(!tripType);
+      setFormData((prevData) => ({
+        ...prevData,
+        availableFlights: validFlightsOneWay,
+        availableFlightsRound: validFlightsRoundWay,
+        showFlights: true,
+        isOneWay: !isRoundTrip,
+
+      }));
     } else {
       alert(
-        "Por favor selecciona un origen, destino válidos y fechas validas."
+        "Por favor selecciona un origen, destino válidos y fechas válidas."
       );
     }
+    
   };
+  
 
+  // Función para confirmar la selección y cerrar el modal
   const handleAccept = () => {
-    console.log("Origin:", origin);
-    console.log("Destination:", destination);
-    console.log("Departure Date:", departureDate);  
-    console.log("Return Date:", returnDate);
-    console.log("Adults:", adults);
-    console.log("Children:", children);
-    console.log("Selected Outbound Flight:", selectedOutboundFlight);
-    console.log("Selected Return Flight:", selectedReturnFlight);
-    setShowModal(false);
+    console.log("Form Data:", formData); // Acción de aceptar, aquí se puede enviar el formulario
+    setFormData((prevData) => ({
+      ...prevData,
+      showModal: false,
+    }));
   };
+  
 
+  // Función para manejar cambios en los campos del formulario
+  /**const handleChange = (e) => {
+    const { name, value } = e.target;
+    setFormData((prevData) => ({
+      ...prevData,
+      [name]: value,
+    }));
+  };**/
   return (
     <div>
-      <div className="bg-sky-100 m-4 rounded">
+      <div className="m-4 rounded">
         <div className="flex justify-normal m-4">
-          <h1 className="font-semibold text-3xl m-4">FLIGHT SEARCH</h1>
-          <div className="flex justify-between items-center mb-2 bg-white rounded-xl m-2 p-2">
-            <div className="mr-4 p-2 bg-sky-200 rounded-xl hover:bg-green-100">
+          <h1 className="font-semibold text-3xl m-5 pt-2">Vuelos</h1>
+          <div className="flex justify-between m-2 rounded-xl p-2">
+            <div className="mr-4 p-2 rounded-xl">
               <input
                 type="radio"
                 id="roundTrip"
-                name="tripType"
-                value="roundTrip"
-                checked={tripType}
-                onChange={() => setTripType(true)}
+                name="isRoundTrip"
+                value="true"
+                checked={formData.isRoundTrip}
+                onChange={() =>
+                  setFormData((prevData) => ({
+                    ...prevData,
+                    isRoundTrip: true,
+                  }))
+                }
+                className="r-boton"
               />
-              <label htmlFor="roundTrip" className="ml-2">
-                Round Trip
+              <label htmlFor="roundTrip" className="ml-2 w-full radio-custom">
+                IDA Y VUELTA
               </label>
             </div>
-            <div className="bg-sky-200 p-2 rounded-xl hover:bg-green-100">
+            <div className="p-2 rounded-xl ">
               <input
                 type="radio"
                 id="oneWay"
-                name="tripType"
-                value="oneWay"
-                checked={!tripType}
-                onChange={() => setTripType(false)}
-                //hola
+                name="isRoundTrip"
+                value="false"
+                checked={!formData.isRoundTrip}
+                onChange={() =>
+                  setFormData((prevData) => ({
+                    ...prevData,
+                    isRoundTrip: false,
+                  }))
+                }
+                className="r-boton"
               />
-              <label htmlFor="oneWay" className="ml-2 ">
-                One Way
+              <label htmlFor="oneWay" className="ml-2 w-100 radio-custom">
+                SOLO IDA
               </label>
             </div>
           </div>
         </div>
         <div className="flex justify-between p-4 m-5">
-          <div className="mx-2 ">
-            <label className="block mb-2 text-xl">Origin:</label>
+          <div className="mx-2 relative ">
+            <label className="block mb-2 label">Origen</label>
             <AirportAutocomplete
-              value={origin}
-              onChange={setOrigin}
-              airports={airport}
+              value={formData.origin}
+              onChange={(value) =>
+                setFormData((prevData) => ({ ...prevData, origin: value }))
+              }
+              airports={formData.airports}
             />
           </div>
           <div className="mx-2">
-            <label className="block mb-2 text-xl ">Destination:</label>
+            <label className="block mb-2 label">Destino</label>
             <div className="z-20">
               <AirportAutocomplete
-                value={destination}
-                onChange={setDestination}
-                airports={airport}
+                value={formData.destination}
+                onChange={(value) =>
+                  setFormData((prevData) => ({
+                    ...prevData,
+                    destination: value,
+                  }))
+                }
+                airports={formData.airports}
               />
             </div>
           </div>
           <div className="mx-2">
-            <label className="block mb-2 text-xl">Departure Date:</label>
+            <label className="block mb-2 label">Fecha de ida</label>
             <input
               type="date"
-              value={departureDate}
-              onChange={(e) => setDepartureDate(e.target.value)}
+              value={formData.departureDate}
+              onChange={(e) =>
+                setFormData((prevData) => ({
+                  ...prevData,
+                  departureDate: e.target.value,
+                }))
+              }
               className="border-2 border-gray-400 rounded px-4 py-2 w-full"
             />
           </div>
           <div className="mx-2">
-            {tripType && (
+            {formData.isRoundTrip && (
               <div className="mx-2">
-                <label className="block mb-2 text-xl">Return Date:</label>
+                <label className="block mb-2 label">Fecha de vuelta</label>
                 <input
                   type="date"
-                  value={returnDate}
-                  onChange={(e) => setReturnDate(e.target.value)}
+                  value={formData.returnDate}
+                  onChange={(e) =>
+                    setFormData((prevData) => ({
+                      ...prevData,
+                      returnDate: e.target.value,
+                    }))
+                  }
                   className="border-2 border-gray-400 rounded-md px-4 py-2 w-full"
                 />
               </div>
             )}
           </div>
-          <div className="mx-1">
-            <label className="block mb-2 text-xl ">Adults:</label>
-            <input
-              type="number"
-              value={adults}
-              onChange={(e) => setAdults(Number(e.target.value))}
-              min={1}
-              className="border-2 border-gray-400 rounded-md px-4 py-2 w-20"
+          <div className="pt-6">
+            <AdultChildrenInput
+              onAdultsChange={(value) =>
+                setFormData((prevData) => ({ ...prevData, adults: value }))
+              }
+              onChildrenChange={(value) =>
+                setFormData((prevData) => ({ ...prevData, children: value }))
+              }
             />
           </div>
-          <div className="mx-2">
-            <label className="block mb-2 text-xl ">Children:</label>
-            <input
-              type="number"
-              value={children}
-              onChange={(e) => setChildren(Number(e.target.value))}
-              min={0}
-              className="border-2 border-gray-400 rounded-md px-4 py-2 w-20"
-            />
-          </div>
-          <div>
+
+          <div className="mx-5 pt-4">
             <button className="btn-search" onClick={handleSearch}>
-            Search Flight
+              Buscar
             </button>
           </div>
         </div>
       </div>
-      {showModal && (
+      {/* Modal para confirmar la selección */}
+      {formData.showModal && (
         <Modal
-          origin={origin}
-          destination={destination}
-          departureDate={departureDate}
-          returnDate={returnDate}
-          adults={adults}
-          children={children}
-          selectedOutboundFlight={selectedOutboundFlight}
-          selectedReturnFlight={selectedReturnFlight}
-          onClose={() => setShowModal(false)}
+          {...formData}
+          onClose={() =>
+            setFormData((prevData) => ({ ...prevData, showModal: false }))
+          }
           onAccept={handleAccept}
         />
       )}
-
-      {showFlights && (
+      
+      {/* Mostrar lista de vuelos */}
+      {formData.showFlights && (
         <div className="mt-8 m-4 p-2 rounded">
-          <h2 className="text-2xl font-semibold">Flights:</h2>
-          {oneWay ? (
+          {formData.isOneWay ? (
+            // Mostrar lista de vuelos de ida
             <FlightListData
-              flights={availableFlights}
-              handleFlightSelection={setSelectedOutboundFlight}
+              flights={formData.availableFlights}
+              handleFlightSelection={(flight) =>
+                setFormData((prevData) => ({
+                  ...prevData,
+                  selectedOutboundFlight: flight,
+                }))
+              }
             />
           ) : (
+            // Mostrar lista de vuelos de ida y vuelta
             <div>
-              <h3 className="text-xl font-semibold mt-4">Outbound Flights:</h3>
+              <h3 className="text-xl font-semibold mt-2">Vuelos de ida</h3>
               <FlightListData
-                flights={availableFlights}
-                handleFlightSelection={setSelectedOutboundFlight}
+                flights={formData.availableFlights}
+                handleFlightSelection={(flight) =>
+                  setFormData((prevData) => ({
+                    ...prevData,
+                    selectedOutboundFlight: flight,
+                  }))
+                }
               />
-              {selectedOutboundFlight && (
+              {formData.selectedOutboundFlight && (
                 <div>
                   <h3 className="text-xl font-semibold mt-4">
-                    Return Flights:
+                    Vuelos de vuelta
                   </h3>
                   <FlightListData
-                    flights={availableFlightsRound}
-                    handleFlightSelection={setSelectedReturnFlight}
+                    flights={formData.availableFlightsRound}
+                    handleFlightSelection={(flight) =>
+                      setFormData((prevData) => ({
+                        ...prevData,
+                        selectedReturnFlight: flight,
+                      }))
+                    }
                   />
                 </div>
               )}
             </div>
           )}
+          {/* Botón para aceptar la selección y mostrar el modal */}
           <button
-            onClick={() => setShowModal(true)}
+            onClick={() =>
+              setFormData((prevData) => ({ ...prevData, showModal: true }))
+            }
             className="mt-4 bg-blue-500 text-white font-semibold py-2 px-4 rounded hover:bg-blue-600"
           >
-            Accept
+            Acceptar
           </button>
         </div>
       )}
-      
     </div>
   );
 }
+
 export default FlightSearch;

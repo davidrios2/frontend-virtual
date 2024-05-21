@@ -7,6 +7,7 @@ export function useFetch(url){
        fetch(url,{mode:'cors'})
         .then(response =>response.json()).then((dataVuelos)=>setDataVuelos(dataVuelos));
       
+      // eslint-disable-next-line react-hooks/exhaustive-deps
       },[])
       
     return {dataVuelos};
@@ -18,6 +19,7 @@ export function useFetch1(url){
        fetch(url,{mode:'cors'})
         .then(response =>response.json()).then((dataAeropuertos)=>setDataAer(dataAeropuertos));
       
+      // eslint-disable-next-line react-hooks/exhaustive-deps
       },[])
       
     return {dataAeropuertos};

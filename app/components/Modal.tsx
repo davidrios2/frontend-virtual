@@ -14,8 +14,9 @@ interface ModalProps {
   onAccept: () => void;
 }
 
-const Modal: React.FC<ModalProps> = ({ origin, destination, departureDate, returnDate, adults, children, selectedOutboundFlight, selectedReturnFlight, onClose, onAccept }) => {
+const Modal: React.FC<ModalProps> = ({ origin, destination, departureDate, returnDate, adults, children, onClose, onAccept }) => {
   return (
+    // eslint-disable-next-line tailwindcss/migration-from-tailwind-2
     <div className="fixed top-0 left-0 w-full h-full flex items-center justify-center bg-gray-800 bg-opacity-50 z-10">
       <div className="bg-white p-8 rounded-lg">
         <h2 className="text-2xl font-semibold mb-4">Selected Flights:</h2>
