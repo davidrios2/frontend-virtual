@@ -1,30 +1,63 @@
 'use client';
 
-import Link from 'next/link';
-import { SubmitHandler, useForm } from 'react-hook-form';
 import { useState } from 'react';
+import { SubmitHandler, useForm } from 'react-hook-form';
+import Link from 'next/link';
+import { signIn } from "next-auth/react";
+import { useRouter } from 'next/navigation';
 import TextField from '@mui/material/TextField';
-import { Checkbox, Grid, Typography } from '@mui/material';
+import { Checkbox, CircularProgress, Grid, Typography } from '@mui/material';
 import MenuItem from '@mui/material/MenuItem';
 
 import { emailValidations, passwordValidations } from "utils"
 import { TelephonePrefixes } from 'components/Forms/TelephonePrefixes';
-import { identificationTypes, UserInterface, } from 'interfaces';
+import { CreateNewUserInterface, UserInterface, UserRoles, identificationTypes } from 'interfaces';
+import { createNewUser } from 'database/dbAuth';
+
 
 export const RegisterForm = () => {
 
+  const router = useRouter()
+
   const [errorMessage, setErrorMessage] = useState("")
-  const {
-    register,
-    handleSubmit,
-    formState: { errors },
-    getValues,
-    setValue,
-    watch,
-  } = useForm<UserInterface>()
+  const [isLoading, setIsLoading] = useState(false);
+
+  const { register, handleSubmit, formState: { errors } } = useForm<UserInterface>()
 
   const onSubmit: SubmitHandler<UserInterface> = async (data) => {
-    //setErrorMessage('');
+
+    setErrorMessage("");
+    setIsLoading(true);
+
+    const newUser: CreateNewUserInterface = {
+      userId: data.identificationNumber,
+      userIdTipe: data.identificationType,
+      userName: data.name,
+      userLastname: data.lastName,
+      userPhoneNumber: `${data.telephonePrefix} ${data.telephoneNumber}`,
+      userEmail: data.email,
+      userPassword: data.password,
+      roleId: UserRoles.USUARIO_REGISTRADO
+    }
+
+    try {
+      const result = await createNewUser(newUser);
+      if (!result) {
+        setErrorMessage("Ha ocurrido un error al intentar crear la cuenta. Por favor, inténtalo de nuevo.");
+        setIsLoading(false);
+      }
+      if (result) {
+        await signIn('credentials', {
+          redirect: false,
+          email: data.email,
+          password: data.password
+        });
+        router.push('/');
+      }
+    } catch (error) {
+      setErrorMessage("Ha ocurrido un error al intentar crear la cuenta. Por favor, inténtalo de nuevo.");
+      setIsLoading(false);
+    }
   }
 
   return (
@@ -170,14 +203,21 @@ export const RegisterForm = () => {
         <Grid item xs={12} className="flex items-center">
           <Checkbox required />
           <Typography variant="body2" color="textSecondary" className="mb-2">
-            Autorizo que mis datos sean tratados de acuerdo a la Política de Privacidad.
+            {'Autorizo que mis datos sean tratados de acuerdo a la '}
+            <Link href="/auth/privacy-policy" target='_blank' className="underline" style={{textDecorationColor:'blue', color:'blue'}} >
+              Política de Privacidad.
+            </Link>
           </Typography>
         </Grid>
       </Grid>
 
       <button className="mb-3 mt-3 flex h-10 items-center justify-center rounded bg-blue-500 text-center text-white">
-        Crear cuenta
+        {
+          isLoading ? <CircularProgress size={20} color="inherit" /> : 'Crear cuenta'
+        }
       </button>
+
+      {errorMessage && <div className="text-red-500 text-left mb-3">{errorMessage}</div>}
 
       <Link href="/auth/login" className="mb-5 mt-3 text-center underline">
         Ya tienes una cuenta? Inicia sesión

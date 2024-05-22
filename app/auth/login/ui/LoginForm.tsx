@@ -8,24 +8,34 @@ import { signIn } from "next-auth/react";
 import { Checkbox, CircularProgress, Grid, TextField, Typography } from "@mui/material";
 import { emailValidations } from 'utils';
 import { LogginInterface } from "interfaces/login.interface";
+import PasswordField from "components/ui/PasswordField";
 
 export const LoginForm = () => {
 
    const router = useRouter()
    const [error, setError] = useState("");
    const [isLoading, setIsLoading] = useState(false);
+   const [showPassword, setShowPassword] = useState(false);
    const { register, handleSubmit, formState: { errors } } = useForm<LogginInterface>();
+
+   const handleClickShowPassword = () => {
+      setShowPassword(!showPassword);
+   }
+
+   const handleMouseDownPassword = (event: React.MouseEvent<HTMLButtonElement>) => {
+      event.preventDefault()
+   }
 
    const onSubmit: SubmitHandler<LogginInterface> = async (data) => {
       setError("");
       setIsLoading(true);
       const result = await signIn('credentials', {
          redirect: false,
-         email: data.email,
-         password: data.password
+         email: data.userEmail,
+         password: data.userPassword
       });
       if (result?.error) {
-         setError("El nombre de usuario, email o contraseña son incorrectos. Vuelve a ingresar tu información o restablece tu contraseña.");
+         setError("El email o contraseña son incorrectos. Vuelve a ingresar tu información o restablece la contraseña.");
          setIsLoading(false);
       }
       if (result?.ok) {
@@ -51,26 +61,25 @@ export const LoginForm = () => {
                      label="Correo electrónico"
                      variant="outlined"
                      fullWidth
-                     {...register('email', {
+                     {...register('userEmail', {
                         required: 'Este campo es requerido',
                         validate: emailValidations.isEmail,
                      })}
-                     error={!!errors.email}
-                     helperText={errors.email?.message}
+                     error={!!errors.userEmail}
+                     helperText={errors.userEmail?.message}
                   />
                </Grid>
 
                <Grid item xs={12}>
-                  <TextField
+                  <PasswordField
                      label="Contraseña"
-                     variant="outlined"
-                     fullWidth
-                     type='password'
-                     {...register('password', {
-                        required: 'Este campo es requerido',
+                     register={register("userPassword", {
+                        required: "Este campo es requerido",
                      })}
-                     error={!!errors.password}
-                     helperText={errors.password?.message}
+                     errors={errors.userPassword}
+                     showPassword={showPassword}
+                     handleClickShowPassword={() => handleClickShowPassword()}
+                     handleMouseDownPassword={handleMouseDownPassword}
                   />
                </Grid>
 
@@ -92,7 +101,7 @@ export const LoginForm = () => {
 
             <button className="bg-blue-500 text-center rounded h-10 mb-3 mt-3 flex items-center justify-center text-white">
                {
-                  isLoading ? <CircularProgress size={20} color="inherit" /> : 'Log In'
+                  isLoading ? <CircularProgress size={20} color="inherit" /> : 'Iniciar sesión'
                }
             </button>
 

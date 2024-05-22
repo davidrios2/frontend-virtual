@@ -1,8 +1,7 @@
 
-import Link from 'next/link'
 import React from 'react'
 import { signOut } from "next-auth/react";
-import { Button, Menu, MenuItem, MenuProps } from '@mui/material';
+import { Button, Menu, MenuItem, MenuProps, Typography } from '@mui/material';
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp';
 import PersonIcon from '@mui/icons-material/Person';
@@ -43,7 +42,11 @@ const StyledMenu = styled((props: MenuProps) => (
   },
 }));
 
-const MenuSession = () => {
+interface Props {
+  userName: string;
+}
+
+const MenuSession = ({ userName }: Props) => {
 
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
   const open = Boolean(anchorEl);
@@ -79,12 +82,14 @@ const MenuSession = () => {
         onClick={handleClick}
         endIcon={open ? <KeyboardArrowUpIcon /> : <KeyboardArrowDownIcon />}
         sx={{
-          minWidth: 180,
+          minWidth: 'auto',
           display: 'flex',
-          justifyContent: 'space-between'
+          justifyContent: 'space-between',
         }}
       >
-        Jhon Doe
+        <Typography variant='body1' style={{ textTransform: 'capitalize', marginRight:'5px' }}>
+          {userName}
+        </Typography>
       </Button>
       <StyledMenu
         id="demo-customized-menu"
