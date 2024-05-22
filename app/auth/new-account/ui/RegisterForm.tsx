@@ -14,6 +14,7 @@ import { TelephonePrefixes } from 'components/Forms/TelephonePrefixes';
 import { CreateNewUserInterface, UserInterface, UserRoles, identificationTypes } from 'interfaces';
 import { createNewUser } from 'database/dbAuth';
 
+
 export const RegisterForm = () => {
 
   const router = useRouter()
