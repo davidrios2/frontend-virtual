@@ -275,6 +275,7 @@ export default function UpdateForm() {
         </Grid>
         <button
           type="submit"
+          disabled={alertOpen}
           className="my-3 flex h-10 w-full items-center justify-center rounded bg-blue-500 text-center text-white"
           style={{ marginTop: "5%", marginBottom: "0" }}
         >
@@ -282,6 +283,7 @@ export default function UpdateForm() {
         </button>
         <Link href="/profile/edit-profile/update-password">
           <button
+            disabled={alertOpen}
             className="mb-3 h-10 w-full items-center justify-center rounded bg-blue-500 text-white"
             style={{ marginTop: "5%" }}
           >
