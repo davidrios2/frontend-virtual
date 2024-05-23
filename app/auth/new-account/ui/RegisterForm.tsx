@@ -1,18 +1,18 @@
 'use client';
 
-import { useState } from 'react';
-import { SubmitHandler, useForm } from 'react-hook-form';
-import Link from 'next/link';
-import { signIn } from "next-auth/react";
-import { useRouter } from 'next/navigation';
-import TextField from '@mui/material/TextField';
 import { Checkbox, CircularProgress, Grid, Typography } from '@mui/material';
 import MenuItem from '@mui/material/MenuItem';
+import TextField from '@mui/material/TextField';
+import Link from 'next/link';
+import { useRouter } from 'next/navigation';
+import { signIn } from "next-auth/react";
+import { useState } from 'react';
+import { SubmitHandler, useForm } from 'react-hook-form';
 
-import { emailValidations, passwordValidations } from "utils"
 import { TelephonePrefixes } from 'components/Forms/TelephonePrefixes';
-import { CreateNewUserInterface, UserInterface, UserRoles, identificationTypes } from 'interfaces';
 import { createNewUser } from 'database/dbAuth';
+import { CreateNewUserInterface, identificationTypes, UserInterface, UserRoles } from 'interfaces';
+import { emailValidations, passwordValidations } from "utils"
 
 
 export const RegisterForm = () => {
@@ -211,7 +211,7 @@ export const RegisterForm = () => {
         </Grid>
       </Grid>
 
-      <button className="mb-3 mt-3 flex h-10 items-center justify-center rounded bg-blue-500 text-center text-white">
+      <button className="my-3 flex h-10 items-center justify-center rounded bg-blue-500 text-center text-white">
         {
           isLoading ? <CircularProgress size={20} color="inherit" /> : 'Crear cuenta'
         }
