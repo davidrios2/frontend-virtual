@@ -2,6 +2,7 @@
 
 import { Titles } from "components/ui/Titles";
 import { LoginForm } from "./ui/LoginForm";
+import { SocialMediaLogin } from "./ui/SocialMediaLogin";
 
 export default function LoginPage() {
    return (
@@ -10,6 +11,8 @@ export default function LoginPage() {
             title='¡Inicio de Sesión!'
             subtitle='Ingresa a tu cuenta de Singapur Airlines para disfrutar de todos nuestros servicios y reservar tus próximos vuelos a cientos de destinos emocionantes.'
          />
+         <br></br>
+         <SocialMediaLogin />
          <LoginForm />
       </div>
    )
