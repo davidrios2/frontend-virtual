@@ -1,9 +1,9 @@
 "use client"
 
 import { Grid } from "@mui/material"
-import MuiAlert from "@mui/material/Alert"
+import MuiAlert, { AlertProps } from "@mui/material/Alert"
 import Snackbar from "@mui/material/Snackbar"
-import jwt from "jsonwebtoken"
+import jwt from 'jsonwebtoken';
 import { useRouter } from "next/navigation"
 import { useSession } from "next-auth/react"
 import React, { useState } from "react"
@@ -14,15 +14,21 @@ import { JWTPayload } from "interfaces/jwt.interface"
 import { passwordValidations } from "utils"
 import PasswordField from "../../../../../../components/ui/PasswordField"
 
+
+
+
 type FormInputs = {
   currentPassword: string
   newPassword: string
   confirmPassword: string
 }
 
-const Alert = React.forwardRef(function Alert(props, ref) {
-  return <MuiAlert elevation={6} ref={ref} variant="filled" {...props} />
-})
+const Alert = React.forwardRef<HTMLDivElement, AlertProps>(function Alert(
+  props,
+  ref
+) {
+  return <MuiAlert elevation={6} ref={ref} variant="filled" {...props} />;
+});
 
 export default function UpdatePasswordForm() {
   const {
@@ -40,12 +46,23 @@ export default function UpdatePasswordForm() {
   const [snackbarOpen, setSnackbarOpen] = useState(false)
   const [snackbarMessage, setSnackbarMessage] = useState("")
 
-  const handleSnackbarClose = (reason: string) => {
-    if (reason === "clickaway") {
-      return
+  // const handleSnackbarClose = (reason: string) => {
+  //   if (reason === "clickaway") {
+  //     return
+  //   }
+  //   setSnackbarOpen(false)
+  // }
+
+  const handleSnackbarClose = (
+    event?: React.SyntheticEvent | Event,
+    reason?: string
+  ) => {
+    if (reason === 'clickaway') {
+      return;
     }
-    setSnackbarOpen(false)
-  }
+
+    setSnackbarOpen(false);
+  };
 
   const [showPassword, setShowPassword] = useState({ current: false, new: false, confirm: false })
 
@@ -93,7 +110,7 @@ export default function UpdatePasswordForm() {
               label="Contraseña actual"
               register={register("currentPassword", {
                 required: "Este campo es requerido",
-                
+
               })}
               errors={errors.currentPassword}
               showPassword={showPassword.current}
@@ -157,8 +174,19 @@ export default function UpdatePasswordForm() {
         </button>
       </form>
 
-      <Snackbar open={snackbarOpen} autoHideDuration={6000} onClose={handleSnackbarClose}>
+      {/* <Snackbar open={snackbarOpen} autoHideDuration={6000} onClose={handleSnackbarClose}>
         <Alert onClose={handleSnackbarClose} severity="success" sx={{ width: "100%" }}>
+          {snackbarMessage}
+        </Alert>
+      </Snackbar> */}
+
+      <Snackbar open={snackbarOpen} autoHideDuration={6000} onClose={handleSnackbarClose}>
+
+        <Alert
+          onClose={handleSnackbarClose}
+          severity="success"
+          sx={{ width: '100%' }}
+        >
           {snackbarMessage}
         </Alert>
       </Snackbar>
