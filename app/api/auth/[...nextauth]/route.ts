@@ -29,8 +29,10 @@ const handler = NextAuth({
          },
       }),
       GoogleProvider({
-         clientId: process.env.GOOGLE_ID!,
-         clientSecret: process.env.GOOGLE_SECRET!,
+         clientId: "700882748149-ns4ak05ik6mg1uog4pb6uhhnqb5usa2e.apps.googleusercontent.com", //TODO: change this to .env
+         clientSecret: "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"
+         // clientId: process.env.GOOGLE_ID!,
+         // clientSecret: process.env.GOOGLE_SECRET!,
       }
       ),
       FacebookProvider({
