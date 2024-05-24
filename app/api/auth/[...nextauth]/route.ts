@@ -38,7 +38,7 @@ const handler = NextAuth({
       })
    ],
    pages: {
-      signIn: "/uth/login",
+      signIn: "/auth/login",
       newUser: '/auth/new-account',
    },
    session: {
