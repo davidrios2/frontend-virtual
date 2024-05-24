@@ -7,7 +7,7 @@ const Navbar = () => {
     <div>
       <nav className="bg-sky-200 text-black py-4">
         <div className="container mx-auto flex items-center justify-between">
-          <div>
+          <div className="text-black font-bold text-base">
             <a href="/">Singapur Airline</a>
           </div>
           <div>
