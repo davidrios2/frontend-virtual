@@ -1,9 +1,9 @@
 "use client"
 
 import { Grid } from "@mui/material"
-import MuiAlert, { AlertProps } from "@mui/material/Alert"
-import Snackbar from "@mui/material/Snackbar"
-import jwt from 'jsonwebtoken';
+import Alert from "@mui/material/Alert"
+import Stack from "@mui/material/Stack"
+import jwt from "jsonwebtoken"
 import { useRouter } from "next/navigation"
 import { useSession } from "next-auth/react"
 import React, { useState } from "react"
@@ -14,21 +14,11 @@ import { JWTPayload } from "interfaces/jwt.interface"
 import { passwordValidations } from "utils"
 import PasswordField from "../../../../../../components/ui/PasswordField"
 
-
-
-
 type FormInputs = {
   currentPassword: string
   newPassword: string
   confirmPassword: string
 }
-
-const Alert = React.forwardRef<HTMLDivElement, AlertProps>(function Alert(
-  props,
-  ref
-) {
-  return <MuiAlert elevation={6} ref={ref} variant="filled" {...props} />;
-});
 
 export default function UpdatePasswordForm() {
   const {
@@ -43,26 +33,16 @@ export default function UpdatePasswordForm() {
   const [passwordUpdated, setPasswordUpdated] = useState(false)
   const router = useRouter()
 
-  const [snackbarOpen, setSnackbarOpen] = useState(false)
-  const [snackbarMessage, setSnackbarMessage] = useState("")
+  const [alertOpen, setAlertOpen] = useState(false)
+  const [alertMessage, setAlertMessage] = useState("")
+  const [alertSeverity, setAlertSeverity] = useState<"success" | "info" | "error">("info")
 
-  // const handleSnackbarClose = (reason: string) => {
-  //   if (reason === "clickaway") {
-  //     return
-  //   }
-  //   setSnackbarOpen(false)
-  // }
-
-  const handleSnackbarClose = (
-    event?: React.SyntheticEvent | Event,
-    reason?: string
-  ) => {
-    if (reason === 'clickaway') {
-      return;
+  const handleAlertClose = (event?: React.SyntheticEvent, reason?: string) => {
+    if (reason === "clickaway") {
+      return
     }
-
-    setSnackbarOpen(false);
-  };
+    setAlertOpen(false)
+  }
 
   const [showPassword, setShowPassword] = useState({ current: false, new: false, confirm: false })
 
@@ -81,25 +61,44 @@ export default function UpdatePasswordForm() {
       try {
         const response = await updatePassword(userId, token, data.currentPassword, data.newPassword)
         console.log(response)
+
+        if (response && response.userPassword) {
+          setAlertMessage("Contraseña actualizada con éxito, regresando a tu perfil...")
+          setAlertSeverity("success")
+        } else {
+          setAlertMessage("Ocurrió un error al cambiar la contraseña")
+          setAlertSeverity("error")
+        }
       } catch (error) {
         console.error("Error updating password", error)
+        setAlertMessage("Ocurrió un error al cambiar la contraseña")
+        setAlertSeverity("error")
       }
-    }
 
-    setSnackbarMessage("Contraseña actualizada con éxito, regresando a tu perfil...")
-    setSnackbarOpen(true)
-    setPasswordUpdated(true)
+      setAlertOpen(true)
+      setPasswordUpdated(true)
+    }
   }
 
   useEffect(() => {
-    if (passwordUpdated) {
+    if (alertOpen) {
       const timer = setTimeout(() => {
-        router.push("/profile")
-      }, 5000)
+        setAlertOpen(false)
+      }, 4000)
 
       return () => clearTimeout(timer)
     }
-  }, [passwordUpdated, router])
+  }, [alertOpen])
+
+  useEffect(() => {
+    if (passwordUpdated && alertSeverity === "success") {
+      const timer = setTimeout(() => {
+        router.push("/profile")
+      }, 4000)
+
+      return () => clearTimeout(timer)
+    }
+  }, [passwordUpdated, alertSeverity, router])
 
   return (
     <>
@@ -110,7 +109,6 @@ export default function UpdatePasswordForm() {
               label="Contraseña actual"
               register={register("currentPassword", {
                 required: "Este campo es requerido",
-
               })}
               errors={errors.currentPassword}
               showPassword={showPassword.current}
@@ -166,30 +164,22 @@ export default function UpdatePasswordForm() {
         </Grid>
         <button
           type="submit"
+          disabled={alertOpen}
           onClick={handleSubmit(onSubmit)}
           className="my-3 flex h-10 w-full items-center justify-center rounded bg-blue-500 text-center text-white"
-          style={{ marginTop: "12%", marginBottom: "10%" }}
+          style={{ marginTop: "5%", marginBottom: "5%" }}
         >
           Cambiar contraseña
         </button>
       </form>
 
-      {/* <Snackbar open={snackbarOpen} autoHideDuration={6000} onClose={handleSnackbarClose}>
-        <Alert onClose={handleSnackbarClose} severity="success" sx={{ width: "100%" }}>
-          {snackbarMessage}
-        </Alert>
-      </Snackbar> */}
-
-      <Snackbar open={snackbarOpen} autoHideDuration={6000} onClose={handleSnackbarClose}>
-
-        <Alert
-          onClose={handleSnackbarClose}
-          severity="success"
-          sx={{ width: '100%' }}
-        >
-          {snackbarMessage}
-        </Alert>
-      </Snackbar>
+      <Stack sx={{ width: "100%" }} spacing={2}>
+        {alertOpen && (
+          <Alert severity={alertSeverity} onClose={handleAlertClose} variant="filled">
+            {alertMessage}
+          </Alert>
+        )}
+      </Stack>
     </>
   )
 }

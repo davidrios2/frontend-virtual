@@ -41,8 +41,9 @@ export const RegisterForm = () => {
 
     try {
       const result = await createNewUser(newUser);
+      console.log(result);
       if (!result) {
-        setErrorMessage("Ha ocurrido un error al intentar crear la cuenta. Por favor, inténtalo de nuevo.");
+        setErrorMessage("Ha ocurrido un error al intentar crear la cuenta. Por favor, inténtalo de nuevo!!.");
         setIsLoading(false);
       }
       if (result) {
@@ -54,7 +55,7 @@ export const RegisterForm = () => {
         router.push('/');
       }
     } catch (error) {
-      setErrorMessage("Ha ocurrido un error al intentar crear la cuenta. Por favor, inténtalo de nuevo.");
+      setErrorMessage("Ha ocurrido un error al intentar crear la cuenta. Por favor verifique los datos ingresados e inténtalo nuevamente.");
       setIsLoading(false);
     }
   }
