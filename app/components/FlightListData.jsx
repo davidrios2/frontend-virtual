@@ -28,22 +28,22 @@ export default function FlightListData({ flights, handleFlightSelection }) {
           }`}
         >
           <div className="flex justify-between p-4">
-            <div className="mx-2">{flight.fechaSalida}</div>
-            <div className="mx-2">{flight.origen.id}</div>
-            <div className="mx-2 text-neutral-600">
-              <div>Duración</div>
-              {flight.horaLlegada}
+            <div className="mx-2"><div className="text-neutral-600 font-bold">Fecha Salida</div>{flight.fechaSalida}</div>
+            <div className="mx-2"><div className="text-neutral-600 font-bold">Origen</div>{flight.origen.id}</div>
+            <div className="mx-2">
+              <div className="text-neutral-600 font-bold">Hora Salida</div>
+              {flight.horaSalida}
             </div>
-            <div className="mx-2">{flight.fechaLlegada}</div>
-            <div className="mx-2">{flight.destino.id}</div>
-            <div className="mx-5">COP {flight.precio}</div>
+            <div className="mx-2"><div className="text-neutral-600 font-bold">Fecha Salida</div>{flight.fechaLlegada}</div>
+            <div className="mx-2"><div className="text-neutral-600 font-bold">Destino</div>{flight.destino.id}</div>
+            <div className="mx-5"><div className="text-neutral-600 font-bold">Precio</div>COP {flight.precio}</div>
           </div>
 
           <div className="flex justify-end m-2">
             <button
-              className={`btn-select m-2 bg-blue-500 text-white ${
+              className={`btn-select m-2 bg-blue-500 text-gray-100 ${
                 selectedFlight === flight
-                  ? "btn-selected bg-white border-2 border-blue-500 text-blue-600"
+                  ? "btn-selected bg-white border-2 border-blue-500 text-blue-500"
                   : ""
               }`}
               onClick={() => handleSelectFlight(flight)}
