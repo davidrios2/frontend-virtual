@@ -38,7 +38,7 @@ export const identificationTypes = [
 ]
 
 export enum UserRoles {
+   SUPER_USUARIO = 100,
    ADMINISTRADOR = 101,
-   SUPER_USUARIO = 102,
-   USUARIO_REGISTRADO = 103
+   USUARIO_REGISTRADO = 102
 }

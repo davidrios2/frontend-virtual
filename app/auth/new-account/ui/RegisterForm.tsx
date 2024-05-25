@@ -10,10 +10,9 @@ import { useState } from 'react';
 import { SubmitHandler, useForm } from 'react-hook-form';
 
 import { TelephonePrefixes } from 'components/Forms/TelephonePrefixes';
+import { CreateNewUserInterface, UserRoles, identificationTypes, UserInterface, } from 'interfaces';
 import { createNewUser } from 'database/dbAuth';
-import { CreateNewUserInterface, identificationTypes, UserInterface, UserRoles } from 'interfaces';
-import { emailValidations, passwordValidations } from "utils"
-
+import { emailValidations, passwordValidations } from "utils";
 
 export const RegisterForm = () => {
 
@@ -42,8 +41,9 @@ export const RegisterForm = () => {
 
     try {
       const result = await createNewUser(newUser);
+      console.log(result);
       if (!result) {
-        setErrorMessage("Ha ocurrido un error al intentar crear la cuenta. Por favor, inténtalo de nuevo.");
+        setErrorMessage("Ha ocurrido un error al intentar crear la cuenta. Por favor, inténtalo de nuevo!!.");
         setIsLoading(false);
       }
       if (result) {
@@ -55,7 +55,7 @@ export const RegisterForm = () => {
         router.push('/');
       }
     } catch (error) {
-      setErrorMessage("Ha ocurrido un error al intentar crear la cuenta. Por favor, inténtalo de nuevo.");
+      setErrorMessage("Ha ocurrido un error al intentar crear la cuenta. Por favor verifique los datos ingresados e inténtalo nuevamente.");
       setIsLoading(false);
     }
   }
