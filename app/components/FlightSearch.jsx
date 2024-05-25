@@ -9,8 +9,8 @@ import {useFetch, useFetch1} from "../../app/useFetch";
 
 function FlightSearch() {
   // Estado para almacenar los datos del formulario y la interfaz de usuario
-  const {dataAeropuertos}=useFetch1("http://localhost:8080/api/aeropuertos/listar");
-  const {dataVuelos}=useFetch("http://localhost:8080/api/vuelos/listar");
+  const {dataAeropuertos}=useFetch1("https://codefact.udea.edu.co/modulo-03/api/aeropuertos/listar");
+  const {dataVuelos}=useFetch("https://codefact.udea.edu.co/modulo-03/api/vuelos/listar");
   const [formData, setFormData] = useState({
     origin: "", // Aeropuerto de origen
     destination: "", // Aeropuerto de destino
