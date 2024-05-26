@@ -1,6 +1,7 @@
 import "styles/tailwind.css";
-import { Roboto } from 'next/font/google';
 import { AppRouterCacheProvider } from '@mui/material-nextjs/v13-appRouter';
+import { Roboto } from 'next/font/google';
+
 import { Providers } from "components/providers/Providers";
 
 const roboto = Roboto({

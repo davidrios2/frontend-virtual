@@ -1,22 +1,10 @@
+import bcrypt from 'bcryptjs';
 import NextAuth from "next-auth";
 import CredentialsProvider from "next-auth/providers/credentials";
-import bcrypt from 'bcryptjs';
+import { loggin } from "database/dbAuth";
+import FacebookProvider from "next-auth/providers/facebook";
+import GoogleProvider from "next-auth/providers/google";
 
-//TODO: Eliminar
-const users = [
-   {
-      id: "1",
-      email: 'example1@google.com.co',
-      password: bcrypt.hashSync('123456', 10),
-      role: 'ADMINISTRATOR'
-   },
-   {
-      id: "2",
-      email: 'example2@google.com.co',
-      password: bcrypt.hashSync('123456', 10),
-      role: 'REGISTEREDUSER'
-   }
-]
 
 const handler = NextAuth({
    providers: [
@@ -28,27 +16,30 @@ const handler = NextAuth({
             password: {},
          },
          async authorize(credentials) {
-            const userFound = users.find(
-               (user) => user.email === credentials!.email
-            );
 
-            if (!userFound) throw new Error("Invalid credentials");
-
-            const passwordMatch = await bcrypt.compare(
-               credentials!.password,
-               userFound.password
-            );
-
-            if (!passwordMatch) throw new Error("Invalid credentials");
-
-            console.log(userFound);
-
-            return userFound;
+            try {
+               const userToken = await loggin(credentials!.email, credentials!.password);
+               if (!userToken) throw new Error("Invalid credentials");
+               return userToken;
+            } catch (error) {
+               console.error('Error en el proceso de inicio de sesión')
+               console.log(error);
+            }
          },
       }),
+      GoogleProvider({
+         clientId: "700882748149-ns4ak05ik6mg1uog4pb6uhhnqb5usa2e.apps.googleusercontent.com", //TODO: change this to .env
+         clientSecret: "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"
+      }
+      ),
+      FacebookProvider({
+         clientId: process.env.FACEBOOK_ID!,
+         clientSecret: process.env.FACEBOOK_SECRET!,
+      })
    ],
    pages: {
       signIn: "/auth/login",
+      newUser: '/auth/new-account',
    },
    session: {
       strategy: "jwt",
@@ -62,7 +53,25 @@ const handler = NextAuth({
          session.user = token.user as any;
          return session;
       },
-   },
-})
+      async signIn({ user, account, profile, email, credentials }) {
+         const isAllowedToSignIn = true
+         if (isAllowedToSignIn) {
+            return true
+         } else {
+            // Return false to display a default error message
+            return false
+            // Or you can return a URL to redirect to:
+            // return '/unauthorized'
+         }
+      }
+      // async signIn({ account, profile }) {
+      //    if (account?.provider === "google") {
+      //      return profile?.email && profile?.email.endsWith("@example.com")
+      //    }
+      //    return true // Do different verification for other providers that don't have `email_verified`
+      //  },
+   }
+},
+)
 
 export { handler as GET, handler as POST };
