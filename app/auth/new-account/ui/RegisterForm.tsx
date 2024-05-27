@@ -10,8 +10,8 @@ import { useState } from 'react';
 import { SubmitHandler, useForm } from 'react-hook-form';
 
 import { TelephonePrefixes } from 'components/Forms/TelephonePrefixes';
-import { CreateNewUserInterface, UserRoles, identificationTypes, UserInterface, } from 'interfaces';
 import { createNewUser } from 'database/dbAuth';
+import { CreateNewUserInterface, identificationTypes, UserInterface, UserRoles, } from 'interfaces';
 import { emailValidations, passwordValidations } from "utils";
 
 export const RegisterForm = () => {
@@ -204,7 +204,7 @@ export const RegisterForm = () => {
           <Checkbox required />
           <Typography variant="body2" color="textSecondary" className="mb-2">
             {'Autorizo que mis datos sean tratados de acuerdo a la '}
-            <Link href="/auth/privacy-policy" target='_blank' className="underline" style={{textDecorationColor:'blue', color:'blue'}} >
+            <Link href="/auth/privacy-policy" target='_blank' className="underline" style={{ textDecorationColor: 'blue', color: 'blue' }} >
               Política de Privacidad.
             </Link>
           </Typography>
