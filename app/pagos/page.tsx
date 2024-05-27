@@ -3,6 +3,8 @@ import React, { useState } from "react";
 import { useRouter } from "next/navigation";
 import { Modal } from "components/organisms/PaymentModal";
 import { MessageDialog } from "components/organisms/PayMessageDialog";
+import { ResumenVuelo } from "components/molecules/cards";
+import { Tabla, TableRow, TableRowBold } from "components/molecules/tables";
 
 export default function Web() {
   const router = useRouter();
@@ -36,7 +38,7 @@ export default function Web() {
   const [hola, setHola] = useState(false);
   const eyHola = () => { setHola(true); setSelectedPaymentOption("") };
 
-  
+
   const handleStartPayment = () => {
     if (!selectedPaymentOption) {
       setErrorMessage("Debes seleccionar un método de pago.");
@@ -55,31 +57,18 @@ export default function Web() {
       <div className="mx-auto mb-2 w-full max-w-md p-4">
 
         {/* VUELO COSTO */}
-        <div className="mb-4 rounded-lg bg-white p-6">
-          <h3 className="mb-2 text-lg font-bold" style={{ color: "#2196F3" }}>Vuelos</h3>
-
-          <div className="mb-2 flex justify-between">
-            <p className="text-base text-black">Tiquetes</p>
-            <p className="text-base text-black">--</p>
-          </div>
-
-          <div className="mb-2 flex justify-between">
-            <p className="text-base text-black">Inpuestos</p>
-            <p className="text-base text-black">--</p>
-          </div>
-
-          <div className="mb-2 flex justify-between">
-            <p className="text-base font-bold" style={{ color: "#2196F3" }}>Total</p>
-            <p className="text-base font-bold text-black">${!hola ? totalToPay.toLocaleString() : "0"}</p>
-          </div>
-
-        </div>
+        <ResumenVuelo title="Vuelos">
+          <TableRow text1="Tiquetes" text2="$0" />
+          <TableRow text1="Inpuestos" text2="$0" />
+          <TableRowBold text1="Total" text2={!hola ? totalToPay.toLocaleString() : "$0"} />
+        </ResumenVuelo>
 
         {/* Métodos de pago */}
         <div className="mb-6 rounded-lg bg-white p-6">
           <h3 className="mb-2 text-lg font-bold" style={{ color: "#2196F3" }}>Medios de pago</h3>
           <div className="mb-2">
 
+            {/* Tarjeta débito */}
             <div className="flex items-center">
               <input
                 type="radio"
@@ -94,6 +83,8 @@ export default function Web() {
                 Tarjeta débito
               </label>
             </div>
+
+            {/* Tarjeta crédito */}
             <div className="flex items-center">
               <input
                 type="radio"
@@ -108,6 +99,8 @@ export default function Web() {
                 Tarjeta crédito
               </label>
             </div>
+
+            {/* PSE */}
             <div className="flex items-center">
               <input
                 type="radio"
@@ -128,6 +121,8 @@ export default function Web() {
             <div className="mt-4 rounded-md bg-red-100 p-2 text-red-600">{errorMessage}</div>
           )}
         </div>
+
+        {/* Bóton de pagasr */}
         <div className="flex justify-center">
           {
             hola
@@ -158,6 +153,7 @@ export default function Web() {
           <Modal paymentOption={selectedPaymentOption} payed={payed} isOpen={isModalOpen} onClose={closeModal} openModal2={openModal2} />
           <MessageDialog wasPayed={wasReservationPayed} isOpen={isModal2Open} onClose={closeModal2} eyHola={eyHola} />
         </div>
+
       </div>
     </div>
   );

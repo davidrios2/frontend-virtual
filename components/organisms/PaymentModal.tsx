@@ -4,6 +4,7 @@ import TextField from "@mui/material/TextField";
 import Grid from "@mui/material/Grid";
 import Axios from "axios";
 import { Autocomplete, Button } from "@mui/material";
+import { useRouter } from "next/navigation";
 
 interface ModalProps extends React.ButtonHTMLAttributes<HTMLAnchorElement> {
   paymentOption: String;
@@ -15,6 +16,8 @@ interface ModalProps extends React.ButtonHTMLAttributes<HTMLAnchorElement> {
 
 export function Modal({ paymentOption, payed, isOpen, onClose, openModal2, ...props }: ModalProps) {
   if (!isOpen) return null;
+
+  const router = useRouter();
 
   const [cardHolderName, setCardHolderName] = useState("");
   const [cardType, setCardType] = useState("Seleccionar");
@@ -696,7 +699,7 @@ export function Modal({ paymentOption, payed, isOpen, onClose, openModal2, ...pr
 
               <h2 className="mb-6 text-left text-2xl font-bold bg-custom-blue" style={{ color: "#2196F3" }}>PSE</h2>
               <h2 className="mb-4 text-sm text-gray-600">Por favor seleccione el banco desde el cual desea realizar el pago</h2>
-              <form onSubmit={handleSubmit}>
+              <form>
                 <Grid container spacing={2}>
                   <Grid item xs={12}>
                     <Autocomplete
@@ -859,7 +862,8 @@ export function Modal({ paymentOption, payed, isOpen, onClose, openModal2, ...pr
                     Atrás
                   </button>
                   <button
-                    type="submit"
+                    onClick={() => router.push('/pse')}
+                    type="button"
                     className="focus:shadow-outline rounded-md bg-blue-600 px-4 py-2 font-bold text-white hover:bg-blue-700 focus:outline-none"
                     style={{ backgroundColor: "#2196F3" }}
                   >

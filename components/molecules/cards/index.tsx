@@ -1,5 +1,5 @@
 import Badge from "components/atoms/badge"
-import { CardTitle, Paragraph } from "components/atoms/text"
+import { CardTitle, CardTitle2, Paragraph } from "components/atoms/text"
 
 export function Card({ icon, title, text }: { icon: string; title: string; text: string }) {
   return (
@@ -12,6 +12,19 @@ export function Card({ icon, title, text }: { icon: string; title: string; text:
       </div>
       <div>
         <Paragraph text={text} />
+      </div>
+    </div>
+  )
+}
+
+export function ResumenVuelo({ title, children }: {  title: string;  children: React.ReactNode }) {
+  return (
+    <div className="mb-4 rounded-lg bg-white p-6">
+      <div className="mb-3">
+        <CardTitle2 title={title} />
+      </div>
+      <div>
+        {children}
       </div>
     </div>
   )

@@ -10,6 +10,10 @@ export function CardTitle({ title }: { title: string }) {
   return <h3 className="text-secondary text-center text-xl font-light">{title}</h3>
 }
 
+export function CardTitle2({ title }: { title: string }) {
+  return <h3 className="mb-2 text-lg font-bold" style={{ color: "#2196F3" }}>{title}</h3>
+}
+
 export function SmallTitle({ title }: { title: string }) {
   return <h4 className="text-secondary text-center text-xs font-light">{title}</h4>
 }
