@@ -21,7 +21,9 @@ export function TableRow({ text1, text2 }: { text1: string; text2: string }) {
 export function TableRowBold({ text1, text2 }: { text1: string; text2: string }) {
   return (
     <div className="mb-2 flex justify-between">
-      <p className="text-base font-bold" style={{ color: "#2196F3" }}>{text1}</p>
+      <p className="text-base font-bold" style={{ color: "#2196F3" }}>
+        {text1}
+      </p>
       <p className="text-base font-bold text-black">{text2}</p>
     </div>
   )

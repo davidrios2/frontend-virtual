@@ -3,7 +3,7 @@ import { CardTitle, CardTitle2, Paragraph } from "components/atoms/text"
 
 export function Card({ icon, title, text }: { icon: string; title: string; text: string }) {
   return (
-    <div className="flex max-w-96 flex-col items-center justify-center p-2 sm:max-w-64 sm:items-start">
+    <div className="max-w-96 sm:max-w-64 flex flex-col items-center justify-center p-2 sm:items-start">
       <div className="my-5">
         <Badge icon={icon} />
       </div>
@@ -17,15 +17,13 @@ export function Card({ icon, title, text }: { icon: string; title: string; text:
   )
 }
 
-export function ResumenVuelo({ title, children }: {  title: string;  children: React.ReactNode }) {
+export function ResumenVuelo({ title, children }: { title: string; children: React.ReactNode }) {
   return (
     <div className="mb-4 rounded-lg bg-white p-6">
       <div className="mb-3">
         <CardTitle2 title={title} />
       </div>
-      <div>
-        {children}
-      </div>
+      <div>{children}</div>
     </div>
   )
 }

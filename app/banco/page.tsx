@@ -1,17 +1,16 @@
-"use client";
-import "styles/tailwind.css";
-import Image from "next/image";
-import { useState } from "react";
+"use client"
+import "styles/tailwind.css"
+import Image from "next/image"
+import { useState } from "react"
 
 export default function Home() {
+  const fecha = new Date()
 
-  const fecha = new Date();
-
-  const [isConfirmed, setIsConfirmed] = useState(false);
+  const [isConfirmed, setIsConfirmed] = useState(false)
 
   const handleConfirm = () => {
-    setIsConfirmed(true);
-  };
+    setIsConfirmed(true)
+  }
 
   return (
     <div style={styles.container}>
@@ -53,7 +52,7 @@ export default function Home() {
         )}
       </div>
     </div>
-  );
+  )
 }
 
 const styles = {
@@ -139,4 +138,4 @@ const styles = {
   transactionValue: {
     color: "#333333",
   },
-};
+}

@@ -3,7 +3,6 @@
 import { useParams } from "next/navigation"
 
 export default function Web() {
-
   const params = useParams<{ id: string }>()
   const { id } = params
 

@@ -11,7 +11,11 @@ export function CardTitle({ title }: { title: string }) {
 }
 
 export function CardTitle2({ title }: { title: string }) {
-  return <h3 className="mb-2 text-lg font-bold" style={{ color: "#2196F3" }}>{title}</h3>
+  return (
+    <h3 className="mb-2 text-lg font-bold" style={{ color: "#2196F3" }}>
+      {title}
+    </h3>
+  )
 }
 
 export function SmallTitle({ title }: { title: string }) {

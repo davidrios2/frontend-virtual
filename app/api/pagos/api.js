@@ -1,4 +1,4 @@
-import axios from "axios";
+import axios from "axios"
 
 export async function fetchPayments(reservationId, cardNumber, cardCvc, cardHolderName) {
   return axios
@@ -6,10 +6,10 @@ export async function fetchPayments(reservationId, cardNumber, cardCvc, cardHold
       reservationId,
       cardNumber,
       cardCvc,
-      cardHolderName
+      cardHolderName,
     })
     .catch((e) => {
-      console.error(e.message);
+      console.error(e.message)
     })
-    .then((res) => res?.data);
+    .then((res) => res?.data)
 }
