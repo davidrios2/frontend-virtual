@@ -1,8 +1,9 @@
 "use client"
+import Image from "next/image";
 import { useRouter } from "next/navigation";
 import React, { useState } from "react";
 import { ResumenVuelo } from "components/molecules/cards";
-import { Tabla, TableRow, TableRowBold } from "components/molecules/tables";
+import { TableRow, TableRowBold } from "components/molecules/tables";
 import { Modal } from "components/organisms/PaymentModal";
 import { MessageDialog } from "components/organisms/PayMessageDialog";
 
@@ -53,7 +54,7 @@ export default function Web() {
 
   return (
     <div className="flex min-h-screen justify-center bg-gray-100">
-      <img src="./HomeReservas.png" alt="Home" style={{ width: "75%", height: "100%" }} />
+      <Image src="./HomeReservas.png" alt="Home" style={{ width: "75%", height: "100%" }} />
       <div className="mx-auto mb-2 w-full max-w-md p-4">
 
         {/* VUELO COSTO */}
@@ -150,7 +151,7 @@ export default function Web() {
           }
 
 
-          <Modal paymentOption={selectedPaymentOption} payed={payed} isOpen={isModalOpen} onClose={closeModal} openModal2={openModal2} />
+          <Modal paymentOption={selectedPaymentOption} payed={payed} isOpen={isModalOpen} onClose={closeModal} openModal2={openModal2} router={router} />
           <MessageDialog wasPayed={wasReservationPayed} isOpen={isModal2Open} onClose={closeModal2} eyHola={eyHola} />
         </div>
 

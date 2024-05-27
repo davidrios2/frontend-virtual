@@ -1,9 +1,6 @@
-import type { Metadata } from "next";
-import Footer from "components/footer/Footer"
-import Header from "components/header/Header"
-import "styles/tailwind.css"
-
 import { AppRouterCacheProvider } from "@mui/material-nextjs/v13-appRouter";
+import type { Metadata } from "next";
+
 import { Roboto } from "next/font/google";
 
 import { Providers } from "components/providers/Providers";

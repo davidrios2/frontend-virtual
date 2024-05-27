@@ -1,4 +1,5 @@
 "use client";
+import Image from "next/image";
 import { useRouter } from "next/navigation";
 import React, { useState } from "react";
 import styled from "styled-components";
@@ -109,7 +110,7 @@ const PaginaPrincipal = () => {
   return (
     <Contenedor>
       <Encabezado>
-        <img src="/Header2.png" alt="Encabezado" />
+        <Image src="/Header2.png" alt="Encabezado" />
       </Encabezado>
       <Titulo>PSE - Pagos Seguros en Línea / Persona Natural</Titulo>
       <ContenedorTipoUsuario>

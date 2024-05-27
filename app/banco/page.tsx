@@ -1,5 +1,6 @@
 "use client";
 import "styles/tailwind.css";
+import Image from "next/image";
 import { useState } from "react";
 
 export default function Home() {
@@ -15,12 +16,12 @@ export default function Home() {
   return (
     <div style={styles.container}>
       <div style={styles.header}>
-        <img src="/banco.png" style={styles.headerImage} alt="Banco Header" />
+        <Image src="/banco.png" style={styles.headerImage} alt="Banco Header" />
       </div>
       <div style={styles.content}>
         <div style={styles.cardSection}>
           <div style={styles.accountInfo}>
-            <img src="/tarjeta.png" alt="Account Card" style={styles.accountImage} />
+            <Image src="/tarjeta.png" alt="Account Card" style={styles.accountImage} />
             <div style={styles.accountText}>
               <div style={styles.accountLabel}>Número de cuenta ahorro/corriente</div>
               <div style={styles.accountNumber}>******2676</div>

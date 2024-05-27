@@ -1,6 +1,3 @@
-import Badge from "components/atoms/badge"
-import { CardTitle, CardTitle2, Paragraph } from "components/atoms/text"
-
 export function Tabla() {
   return (
     <tr>

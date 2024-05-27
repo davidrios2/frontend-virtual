@@ -3,9 +3,6 @@ import { fetchPayments } from "../api/pagos/api";
 
 
 export function useFetchPayments(reservationId, cardNumber, cardCvc, cardHolderName) {
-  const [data, setData] = useState(null);
-  const [error, setError] = useState(null);
-  const [isLoading, setIsLoading] = useState(false);
 
   const [res, setRes] = useState({ data: null, error: null, isLoading: false });
 

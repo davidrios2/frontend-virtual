@@ -1,8 +1,9 @@
+import Image from "next/image";
 
 export default function Header() {
   return (
     <header>
-      <img src="./Header.png" alt="Header" />
+      <Image src="./Header.png" alt="Header" />
     </header>
   )
 }
