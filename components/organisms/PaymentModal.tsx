@@ -1,10 +1,10 @@
 "use client"
-import React, { useContext, useState } from "react";
-import TextField from "@mui/material/TextField";
-import Grid from "@mui/material/Grid";
-import Axios from "axios";
 import { Autocomplete, Button } from "@mui/material";
+import Grid from "@mui/material/Grid";
+import TextField from "@mui/material/TextField";
+import Axios from "axios";
 import { useRouter } from "next/navigation";
+import React, { useState } from "react";
 
 interface ModalProps extends React.ButtonHTMLAttributes<HTMLAnchorElement> {
   paymentOption: String;
@@ -20,16 +20,24 @@ export function Modal({ paymentOption, payed, isOpen, onClose, openModal2, ...pr
   const router = useRouter();
 
   const [cardHolderName, setCardHolderName] = useState("");
+  const [expiryMonth, setExpiryMonth] = useState("");
+  const [identificationNumber, setIdentificationNumber] = useState("");
+  const [expiryYear, setExpiryYear] = useState("");
+  const [errorMessage, setErrorMessage] = useState("");
+
   const [cardType, setCardType] = useState("Seleccionar");
   const [cardNumber, setCardNumber] = useState("");
   const [cvv, setCvv] = useState("");
   const [installments, setInstallments] = useState("Seleccionar");
-  const [errorMessage, setErrorMessage] = useState("");
-  const [expiryMonth, setExpiryMonth] = useState("");
-  const [expiryYear, setExpiryYear] = useState("");
   const [identificationType, setIdentificationType] = useState("");
-  const [identificationNumber, setIdentificationNumber] = useState("");
   const [agree, setAgree] = useState("");
+
+  const [bankEntity, setBankEntity] = useState("");
+  const [personType, setPersonType] = useState("");
+  const [socialReason, setSocialReason] = useState("");
+  const [email, setEmail] = useState("");
+
+  const [isLoading, setIsLoading] = useState(false);
 
   const [creditCardData, setCreditCardData] = useState({
     cardHolderName: "",
@@ -56,9 +64,6 @@ export function Modal({ paymentOption, payed, isOpen, onClose, openModal2, ...pr
     identificationNumber: "",
     agree: true
   });
-
-
-  const [isLoading, setIsLoading] = useState(false);
 
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -153,14 +158,6 @@ export function Modal({ paymentOption, payed, isOpen, onClose, openModal2, ...pr
     let actual = creditCardData.agree
     setCreditCardData(prevState => ({ ...prevState, agree: !actual }));
   };
-
-
-
-  const [bankEntity, setBankEntity] = useState("");
-  const [personType, setPersonType] = useState("");
-  const [socialReason, setSocialReason] = useState("");
-  const [email, setEmail] = useState("");
-
 
   const handleSocialReasonChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const inputValue = e.target.value;

@@ -1,7 +1,7 @@
 "use client";
+import { useRouter } from "next/navigation";
 import React, { useState } from "react";
 import styled from "styled-components";
-import { useRouter } from "next/navigation";
 import "styles/tailwind.css"
 
 const Contenedor = styled.div`

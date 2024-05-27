@@ -1,10 +1,10 @@
 "use client"
-import React, { useState } from "react";
 import { useRouter } from "next/navigation";
-import { Modal } from "components/organisms/PaymentModal";
-import { MessageDialog } from "components/organisms/PayMessageDialog";
+import React, { useState } from "react";
 import { ResumenVuelo } from "components/molecules/cards";
 import { Tabla, TableRow, TableRowBold } from "components/molecules/tables";
+import { Modal } from "components/organisms/PaymentModal";
+import { MessageDialog } from "components/organisms/PayMessageDialog";
 
 export default function Web() {
   const router = useRouter();

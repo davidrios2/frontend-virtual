@@ -1,15 +1,15 @@
 "use client"
 
-import MenuSession from "components/ui/MenuSession"
-import ButtonSession from "components/ui/ButtonSession"
-import Navbar from "components/ui/Navbar"
-import Footer from "components/ui/Footer";
 import Link from "next/link";
+import { signIn, useSession } from "next-auth/react"
+import ButtonSession from "components/ui/ButtonSession"
+import Footer from "components/ui/Footer";
+import MenuSession from "components/ui/MenuSession"
+import Navbar from "components/ui/Navbar"
 
-import { JWTPayload } from "interfaces/jwt.interface";
 import { UserRoles } from "interfaces";
+import { JWTPayload } from "interfaces/jwt.interface";
 
-import { useSession, signIn } from "next-auth/react"
 
 export default function PagosLayout({ children, }: { children: React.ReactNode }) {
 
@@ -47,7 +47,7 @@ export default function PagosLayout({ children, }: { children: React.ReactNode }
               )
           }
         </Navbar>
-        <main className="flex-grow bg-gray-100">
+        <main className="grow bg-gray-100">
           {children}
         </main>
         <Footer>

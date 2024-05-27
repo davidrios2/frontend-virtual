@@ -1,6 +1,6 @@
+import AccountCircleOutlinedIcon from "@mui/icons-material/AccountCircleOutlined";
 import Link from "next/link"
 import React from "react"
-import AccountCircleOutlinedIcon from "@mui/icons-material/AccountCircleOutlined";
 
 interface btnProps {
     path: string,
