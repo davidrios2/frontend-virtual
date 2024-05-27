@@ -3,8 +3,8 @@ import Footer from "components/footer/Footer"
 import Header from "components/header/Header"
 import "styles/tailwind.css"
 
-import { AppRouterCacheProvider } from '@mui/material-nextjs/v13-appRouter';
-import { Roboto } from 'next/font/google';
+import { AppRouterCacheProvider } from "@mui/material-nextjs/v13-appRouter";
+import { Roboto } from "next/font/google";
 
 import { Providers } from "components/providers/Providers";
 
@@ -14,9 +14,9 @@ export const metadata: Metadata = {
 };
 
 const roboto = Roboto({
-  weight: '400',
-  subsets: ['latin'],
-  display: 'swap',
+  weight: "400",
+  subsets: ["latin"],
+  display: "swap",
 })
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {

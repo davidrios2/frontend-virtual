@@ -1,7 +1,7 @@
 "use client";
-import React, { useState } from 'react';
-import styled from 'styled-components';
-import { useRouter } from 'next/navigation';
+import React, { useState } from "react";
+import styled from "styled-components";
+import { useRouter } from "next/navigation";
 import "styles/tailwind.css"
 
 const Contenedor = styled.div`
@@ -91,7 +91,7 @@ const ContenedorBotonesAccion = styled.div`
 `;
 
 const PaginaPrincipal = () => {
-  const [correo, setCorreo] = useState('');
+  const [correo, setCorreo] = useState("");
   const router = useRouter();
 
   const manejarCambioCorreo = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -99,11 +99,11 @@ const PaginaPrincipal = () => {
   };
 
   const volver = () => {
-    router.push('/pagos'); // Cambia '/pse' por la ruta de tu página destino
+    router.push("/pagos"); // Cambia "/pse" por la ruta de tu página destino
   };
 
   const irAlBanco = () => {
-    router.push('/banco'); // Cambia '/pse' por la ruta de tu página destino 
+    router.push("/banco"); // Cambia "/pse" por la ruta de tu página destino 
   };
 
   return (

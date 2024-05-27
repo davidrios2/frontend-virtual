@@ -862,7 +862,7 @@ export function Modal({ paymentOption, payed, isOpen, onClose, openModal2, ...pr
                     Atrás
                   </button>
                   <button
-                    onClick={() => router.push('/pse')}
+                    onClick={() => router.push("/pse")}
                     type="button"
                     className="focus:shadow-outline rounded-md bg-blue-600 px-4 py-2 font-bold text-white hover:bg-blue-700 focus:outline-none"
                     style={{ backgroundColor: "#2196F3" }}

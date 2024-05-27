@@ -7,7 +7,7 @@ import { LP_GRID_ITEMS } from "lp-items"
 
 /**export function Home() {
   return (
-    <div className='bg-white h-screen flex justify-center items-center'>
+    <div className="bg-white h-screen flex justify-center items-center">
       <Menu />
       <Buttom />
       <Buttom />

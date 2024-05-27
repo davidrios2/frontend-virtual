@@ -1,10 +1,10 @@
-import React from 'react'
+import React from "react"
 import Link from "next/link";
-import AppBar from '@mui/material/AppBar';
-import Box from '@mui/material/Box';
-import Toolbar from '@mui/material/Toolbar';
-import Typography from '@mui/material/Typography';
-import IconButton from '@mui/material/IconButton';
+import AppBar from "@mui/material/AppBar";
+import Box from "@mui/material/Box";
+import Toolbar from "@mui/material/Toolbar";
+import Typography from "@mui/material/Typography";
+import IconButton from "@mui/material/IconButton";
 
 const Navbar = ({ children }: { children: React.ReactNode }) => {
     return (
@@ -22,7 +22,7 @@ const Navbar = ({ children }: { children: React.ReactNode }) => {
                     <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
                         <Link href="/">Singapur Airline</Link>
                     </Typography>
-                    <div className='flex gap-4 items-center'>
+                    <div className="flex gap-4 items-center">
                         {children}
                     </div>
 

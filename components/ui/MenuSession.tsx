@@ -1,41 +1,41 @@
-import React from 'react'
+import React from "react"
 import { signOut } from "next-auth/react";
-import { Button, Menu, MenuItem, MenuProps, Typography } from '@mui/material';
-import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
-import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp';
-import PersonIcon from '@mui/icons-material/Person';
-import ExitToAppIcon from '@mui/icons-material/ExitToApp';
-import styled from '@emotion/styled';
-import { useRouter } from 'next/navigation';
+import { Button, Menu, MenuItem, MenuProps, Typography } from "@mui/material";
+import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
+import KeyboardArrowUpIcon from "@mui/icons-material/KeyboardArrowUp";
+import PersonIcon from "@mui/icons-material/Person";
+import ExitToAppIcon from "@mui/icons-material/ExitToApp";
+import styled from "@emotion/styled";
+import { useRouter } from "next/navigation";
 
 const StyledMenu = styled((props: MenuProps) => (
     <Menu
         elevation={0}
         anchorOrigin={{
-            vertical: 'bottom',
-            horizontal: 'right',
+            vertical: "bottom",
+            horizontal: "right",
         }}
         transformOrigin={{
-            vertical: 'top',
-            horizontal: 'right',
+            vertical: "top",
+            horizontal: "right",
         }}
         {...props}
     />
 ))(({ theme }) => ({
-    '& .MuiPaper-root': {
+    "& .MuiPaper-root": {
         borderRadius: 6,
         minWidth: 180,
-        color: 'white',
-        backgroundColor: '#1976d2',
+        color: "white",
+        backgroundColor: "#1976d2",
         boxShadow:
-            'rgb(255, 255, 255) 0px 0px 0px 0px, rgba(0, 0, 0, 0.05) 0px 0px 0px 1px, rgba(0, 0, 0, 0.1) 0px 10px 15px -3px, rgba(0, 0, 0, 0.05) 0px 4px 6px -2px',
-        '& .MuiMenu-list': {
-            padding: '4px 0',
+            "rgb(255, 255, 255) 0px 0px 0px 0px, rgba(0, 0, 0, 0.05) 0px 0px 0px 1px, rgba(0, 0, 0, 0.1) 0px 10px 15px -3px, rgba(0, 0, 0, 0.05) 0px 4px 6px -2px",
+        "& .MuiMenu-list": {
+            padding: "4px 0",
         },
-        '& .MuiMenuItem-root': {
-            '& .MuiSvgIcon-root': {
+        "& .MuiMenuItem-root": {
+            "& .MuiSvgIcon-root": {
                 fontSize: 18,
-                marginRight: '10px',
+                marginRight: "10px",
             },
         },
     },
@@ -66,40 +66,40 @@ const MenuSession = ({ userName }: Props) => {
 
     const handleExit = () => {
         signOut()
-        router.push('/');
+        router.push("/");
     }
 
     return (
         <>
             <Button
                 id="demo-customized-button"
-                aria-controls={open ? 'demo-customized-menu' : undefined}
+                aria-controls={open ? "demo-customized-menu" : undefined}
                 aria-haspopup="true"
-                aria-expanded={open ? 'true' : undefined}
+                aria-expanded={open ? "true" : undefined}
                 variant="contained"
                 disableElevation
                 onClick={handleClick}
                 endIcon={open ? <KeyboardArrowUpIcon /> : <KeyboardArrowDownIcon />}
                 sx={{
-                    minWidth: 'auto',
-                    display: 'flex',
-                    justifyContent: 'space-between',
+                    minWidth: "auto",
+                    display: "flex",
+                    justifyContent: "space-between",
                 }}
             >
-                <Typography variant='body1' style={{ textTransform: 'capitalize', marginRight: '5px' }}>
+                <Typography variant="body1" style={{ textTransform: "capitalize", marginRight: "5px" }}>
                     {userName}
                 </Typography>
             </Button>
             <StyledMenu
                 id="demo-customized-menu"
                 MenuListProps={{
-                    'aria-labelledby': 'demo-customized-button',
+                    "aria-labelledby": "demo-customized-button",
                 }}
                 anchorEl={anchorEl}
                 open={open}
                 onClose={handleClose}
             >
-                <MenuItem onClick={() => navigateTo('/profile')} disableRipple>
+                <MenuItem onClick={() => navigateTo("/profile")} disableRipple>
                     <PersonIcon />
                     Perfil
                 </MenuItem>
