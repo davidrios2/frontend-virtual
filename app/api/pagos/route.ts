@@ -17,24 +17,6 @@ function findReservation(reservation: any, index: Number, id: String) {
 }
 
 export async function GET() {
+  // reservations.find((reservation, index) => findReservation(reservation, index, id))
   return Response.json({ status: "Bienvenido a la API de Pagos" })
 }
-
-export async function getAmountByReservation(id: String) {
-  let reserv = reservations.find((reservation, index) => findReservation(reservation, index, id))
-  return reserv
-}
-
-// export async function fetchPayments(reservationId: Number, cardNumber: String, cardCvc: String, cardHolderName: String) {
-//   return axios
-//     .post("https://codefact.fly.dev/api/payments", {
-//       reservationId,
-//       cardNumber,
-//       cardCvc,
-//       cardHolderName
-//     })
-//     .catch((e) => {
-//       console.error(e.message);
-//     })
-//     .then((res) => res?.data);
-// }
