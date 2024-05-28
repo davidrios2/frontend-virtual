@@ -57,7 +57,8 @@ function ReservationPage() {
           <input type="text" id="numero-documento" value={numeroDocumento} onChange={(e) => setNumeroDocumento(e.target.value)} className="border rounded px-2 py-1" />
         </div>
         <div className="mb-4">
-          <button onClick={agregarPasajero} className="bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-600">Agregar Pasajero</button>
+          {/*Added ID*/}
+          <button id="agregar-pasajero" onClick={agregarPasajero} className="bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-600">Agregar Pasajero</button>
         </div>
         <table className="w-full mb-4">
           <thead>
@@ -69,9 +70,10 @@ function ReservationPage() {
               <th>Valor del Tiquete</th>
             </tr>
           </thead>
-          <tbody>
+          {/*Added ID*/}
+          <tbody id="pasajeros">
             {pasajeros.map((pasajero, index) => (
-              <tr key={index}>
+              <tr key={index} id={`pasajero-${index}`}>
                 <td>{pasajero.nombre}</td>
                 <td>{pasajero.apellido}</td>
                 <td>{pasajero.numeroDocumento}</td>
@@ -83,12 +85,12 @@ function ReservationPage() {
         </table>
         <div className="mb-4">
           <label>
-            <input type="checkbox" checked={autorizado} onChange={() => setAutorizado(!autorizado)} /> Autorizo el tratamiento de mis datos personales conforme a la política de privacidad
+            <input id="autorizar-tratamiento" type="checkbox" checked={autorizado} onChange={() => setAutorizado(!autorizado)} /> Autorizo el tratamiento de mis datos personales conforme a la política de privacidad
           </label>
         </div>
         <div className="mb-4">
           <p>Valor Total: <span>{calcularTotal()}</span></p>
-          <button onClick={() => alert('Pagar')} className="bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-600">Pagar</button>
+          <button id="pagar" onClick={() => alert('Pagar')} className="bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-600">Pagar</button>
         </div>
       </div>
       <div className="h-12 bg-blue-500 text-white flex items-center justify-center">
