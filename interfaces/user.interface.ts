@@ -30,6 +30,14 @@ export interface GetUserReponse {
    credentialsNonExpired: boolean;
 }
 
+export interface GetListUserResponse {
+   userId: string;
+   userName: string;
+   userLastname: string;
+   userEmail: string;
+   userRole: number;
+}
+
 export const identificationTypes = [
    { value: "CC", label: "CC" },
    { value: "PA", label: "PA" },

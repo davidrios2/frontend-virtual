@@ -1,6 +1,6 @@
 'use client'
 
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import Paper from '@mui/material/Paper';
 import Table from '@mui/material/Table';
 import TableBody from '@mui/material/TableBody';
@@ -12,61 +12,35 @@ import TableRow from '@mui/material/TableRow';
 import { SearchInput } from './SearchInput';
 import { Checkbox } from '@mui/material';
 import { UserImage } from './UserImage';
+import { GetListUserResponse } from 'interfaces';
 import { useSession } from 'next-auth/react';
+import { getAllUser } from 'database/dbUser';
+import { SelectMenuRole } from './SelectMenuRole';
+
 
 interface Column {
-    id: 'name' | 'email' | 'lastActive' | 'permisos' | 'rol';
+    id: string;
     label: string;
     minWidth?: number;
     align?: 'right';
 }
 
 const columns: readonly Column[] = [
-    { id: 'name', label: 'Name', minWidth: 180 },
-    { id: 'email', label: 'Email', minWidth: 170 },
+    { id: 'userName', label: 'Name', minWidth: 180 },
+    { id: 'userEmail', label: 'Email', minWidth: 170 },
     { id: 'lastActive', label: 'última vez activo', minWidth: 100 },
     { id: 'permisos', label: 'Permisos', minWidth: 100 },
-    { id: 'rol', label: 'Rol', minWidth: 100 }
+    { id: 'userRole', label: 'Rol', minWidth: 100 }
 ];
 
-interface Data {
-    name: string;
-    email: string;
-    lastActive: string;
-    permisos: string;
-    rol: string;
-}
-
-function createData(
-    name: string,
-    email: string,
-    lastActive: string,
-    permisos: string,
-    rol: string
-): Data {
-    return { name, email, lastActive, permisos, rol };
-}
-
-const rows = [
-    createData('Brooklyn Simmons', 'example@gmail.com', "2 meses", "Puede editar", "Usuario"),
-    createData('Brooklyn Simmons', 'example@gmail.com', "2 meses", "Puede editar", "Editor"),
-    createData('Brooklyn Simmons', 'example@gmail.com', "2 meses", "Puede editar", "Admin"),
-    createData('Brooklyn Simmons', 'example@gmail.com', "2 meses", "Puede editar", "Editor"),
-    createData('Brooklyn Simmons', 'example@gmail.com', "2 meses", "Puede editar", "Admin"),
-    createData('Brooklyn Simmons', 'example@gmail.com', "2 meses", "Puede editar", "Vista"),
-    createData('Brooklyn Simmons', 'example@gmail.com', "2 meses", "Puede editar", "Vista"),
-    createData('Brooklyn Simmons', 'example@gmail.com', "2 meses", "Puede editar", "Usuario"),
-    createData('Brooklyn Simmons', 'example@gmail.com', "2 meses", "Puede editar", "Editor"),
-    createData('Brooklyn Simmons', 'example@gmail.com', "2 meses", "Puede editar", "Admin"),
-    createData('Brooklyn Simmons', 'example@gmail.com', "2 meses", "Puede editar", "Editor"),
-];
 
 export const StickyHeadTable = () => {
-
-    const { data: session } = useSession();
-    const NAME_COLUMN_ID = "name";
+    const NAME_COLUMN_ID = "userName";
+    const [rowsData, setRowsData] = useState<GetListUserResponse[]>([]);
     const [page, setPage] = React.useState(0);
     const [rowsPerPage, setRowsPerPage] = React.useState(10);
+    //const [permissionRole, setPermissionRole] = useState();
+    const { data: session, status } = useSession();
 
     const handleChangePage = (event: unknown, newPage: number) => {
         setPage(newPage);
@@ -78,29 +52,40 @@ export const StickyHeadTable = () => {
     };
 
     useEffect(() => {
-        async function fetchDataUser() {
-            if (session?.user.role === "ADMINISTRATOR") {
-                const response = await fetch("https://codefact.udea.edu.co/modulo-21/listUsers");
-                const dataUser = await response.json();
-                console.log(dataUser)
+        if (status === 'authenticated') {
+            const token: string = session.user.token
+            const fecthListUser = async () => {
+                const listUser = await getAllUser(token)
+                const data = listUser.map((user) => {
+                    const { userId, userName, userLastname, userEmail, userRole } = user;
+                    return { userId, userName, userLastname, userEmail, userRole }
+                })
+                setRowsData(data)
+                
             }
+            fecthListUser()
         }
+    }, [session, status])
 
-        fetchDataUser()
-    }, [])
-
+    const handleRoleChange = (userId: string, newRole: number) => {
+        setRowsData(prevData => 
+            prevData.map(row => 
+                row.userId === userId ? { ...row, userRole: newRole } : row
+            )
+        );
+    }
 
     return (
         <Paper sx={{ width: '80%', overflow: 'hidden' }}>
             <TableContainer sx={{ maxHeight: 450 }}>
                 <Table stickyHeader aria-label="sticky table">
                     <TableHead>
-                        <TableRow key="-1">
+                        <TableRow key="headerColumn">
                             {columns.map((column, index) => {
                                 if (column.id === NAME_COLUMN_ID) {
                                     return (
                                         <TableCell
-                                            key={column.id}
+                                            key={index}
                                             align={column.align}
                                             style={{ minWidth: column.minWidth }}
                                         >
@@ -113,7 +98,7 @@ export const StickyHeadTable = () => {
                                 } else {
                                     return (
                                         <TableCell
-                                            key={column.id}
+                                            key={index}
                                             align={column.align}
                                             style={{ minWidth: column.minWidth }}
                                         >
@@ -125,37 +110,81 @@ export const StickyHeadTable = () => {
                         </TableRow>
                     </TableHead>
                     <TableBody>
-                        {rows
+                        {rowsData
                             .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                             .map((row) => {
                                 return (
-                                    <TableRow hover role="checkbox" tabIndex={1} key={row.email}>
-                                        {columns.map((column) => {
-                                            const value = row[column.id];
-                                            return (
-                                                <TableCell key={column.id} align={column.align}>
-                                                    {column.id === 'name' ? (
-                                                        <div className='flex items-center'>
-                                                            <Checkbox />
-                                                            <UserImage />
-                                                            {value}
-                                                        </div>
-                                                    ) : (
-                                                        value
-                                                    )}
-                                                </TableCell>
-                                            );
-                                        })}
+                                    <TableRow hover role="checkbox" tabIndex={1} key={row.userId}>
+                                        {columns
+                                            .map((column) => {
+                                                if (column.id === NAME_COLUMN_ID) {
+                                                    return (
+                                                        <TableCell key={column.id} align={column.align}>
+                                                            {
+                                                                <div className='flex items-center'>
+                                                                    <Checkbox />
+                                                                    <UserImage />
+                                                                    {row.userName + " " + row.userLastname}
+                                                                </div>
+                                                            }
+                                                        </TableCell>
+                                                    )
+                                                }
+                                                if (column.id === "userEmail") {
+                                                    return (
+                                                        <TableCell key={column.id} align={column.align}>
+                                                            {
+                                                                row.userEmail
+                                                            }
+                                                        </TableCell>
+                                                    )
+                                                }
+                                                if (column.id === "lastActive") {
+                                                    return (
+                                                        <TableCell key={column.id} align={column.align}>
+                                                            {
+                                                                "2 semanas"
+                                                            }
+                                                        </TableCell>
+                                                    )
+                                                }
+                                                if (column.id === "permisos") {
+                                                    return (
+                                                        <TableCell key={column.id} align={column.align}>
+                                                            {row.userRole === 102
+                                                                ? ("Puede ver")
+                                                                : ("Puede editar")
+                                                            }
+                                                        </TableCell>
+                                                    )
+                                                }
+                                                if (column.id === "userRole") {
+
+                                                    return (
+                                                        <TableCell key={column.id} align={column.align}>
+                                                            {
+                                                                <SelectMenuRole 
+                                                                    role={row.userRole}
+                                                                    userId={row.userId}
+                                                                    onRoleChange={handleRoleChange}
+                                                                    />
+                                                            }
+                                                        </TableCell>
+                                                    )
+                                                }
+                                            })
+                                        }
                                     </TableRow>
-                                );
-                            })}
+                                )
+                            })
+                        }
                     </TableBody>
                 </Table>
             </TableContainer>
             <TablePagination
                 rowsPerPageOptions={[5, 10]}
                 component="div"
-                count={rows.length}
+                count={rowsData.length}
                 rowsPerPage={rowsPerPage}
                 page={page}
                 onPageChange={handleChangePage}

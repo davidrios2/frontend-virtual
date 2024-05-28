@@ -10,6 +10,15 @@ export const getUserById = async (userId: string, token: string): Promise<GetUse
   return data
 }
 
+export const getAllUser = async (token: string): Promise<GetUserReponse[]> => {
+  const { data } = await authApi.get('/users/listUsers', {
+    headers:{
+      Authorization: `Bearer ${token}`,
+    },
+  })
+  return data
+}
+
 export const updateUser = async (
   userId: string,
   token: string,
@@ -42,6 +51,26 @@ export const updatePassword = async (
       userId,
       currentPassword,
       newPassword,
+    },
+    {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    }
+  )
+  return data
+}
+
+export const updateRole = async (
+  token: string,
+  userId: string,
+  userRole: number
+): Promise<any> => {
+  const { data } = await authApi.put(
+    `/users/updateUserRole`,
+    {
+      userId,
+      userRole
     },
     {
       headers: {
