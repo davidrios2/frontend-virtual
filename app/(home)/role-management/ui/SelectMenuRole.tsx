@@ -42,7 +42,7 @@ export const SelectMenuRole = ({ role, userId, onRoleChange }: SelectMenuRolePro
             const token: string = session.user.token
             updateUserRole(userId, roleId, token)
         }
-        console.log("Nuevo rol: " + newRole + " = " + roleId)
+        //console.log("Nuevo rol: " + newRole + " = " + roleId)
         setCurrenRole(UserRoles[roleId])
         onRoleChange(userId, roleId)
         handleCancel()

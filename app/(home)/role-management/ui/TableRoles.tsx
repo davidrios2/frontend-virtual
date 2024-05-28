@@ -1,6 +1,6 @@
 'use client'
 
-import React, { useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import Paper from '@mui/material/Paper';
 import Table from '@mui/material/Table';
 import TableBody from '@mui/material/TableBody';
@@ -52,28 +52,34 @@ export const StickyHeadTable = () => {
     };
 
     useEffect(() => {
-        if (status === 'authenticated') {
+        if (status === 'authenticated' && session.user.role != "USUARIO_REGISTRADO") {
             const token: string = session.user.token
-            const fecthListUser = async () => {
-                const listUser = await getAllUser(token)
-                const data = listUser.map((user) => {
-                    const { userId, userName, userLastname, userEmail, userRole } = user;
-                    return { userId, userName, userLastname, userEmail, userRole }
-                })
-                setRowsData(data)
-                
-            }
-            fecthListUser()
+            const fetchListUser = async () => {
+                try {
+                    const listUser = await getAllUser(token);
+                    const data = listUser.map(user => ({
+                        userId: user.userId,
+                        userName: user.userName,
+                        userLastname: user.userLastname,
+                        userEmail: user.userEmail,
+                        userRole: user.userRole
+                    }));
+                    setRowsData(data);
+                } catch (error) {
+                    console.error('Failed to fetch users:', error);
+                }
+            };
+            fetchListUser()
         }
     }, [session, status])
 
-    const handleRoleChange = (userId: string, newRole: number) => {
-        setRowsData(prevData => 
-            prevData.map(row => 
+    const handleRoleChange = useCallback((userId: string, newRole: number) => {
+        setRowsData(prevData =>
+            prevData.map(row =>
                 row.userId === userId ? { ...row, userRole: newRole } : row
             )
         );
-    }
+    }, [])
 
     return (
         <Paper sx={{ width: '80%', overflow: 'hidden' }}>
@@ -115,65 +121,29 @@ export const StickyHeadTable = () => {
                             .map((row) => {
                                 return (
                                     <TableRow hover role="checkbox" tabIndex={1} key={row.userId}>
-                                        {columns
-                                            .map((column) => {
-                                                if (column.id === NAME_COLUMN_ID) {
-                                                    return (
-                                                        <TableCell key={column.id} align={column.align}>
-                                                            {
-                                                                <div className='flex items-center'>
-                                                                    <Checkbox />
-                                                                    <UserImage />
-                                                                    {row.userName + " " + row.userLastname}
-                                                                </div>
-                                                            }
-                                                        </TableCell>
-                                                    )
-                                                }
-                                                if (column.id === "userEmail") {
-                                                    return (
-                                                        <TableCell key={column.id} align={column.align}>
-                                                            {
-                                                                row.userEmail
-                                                            }
-                                                        </TableCell>
-                                                    )
-                                                }
-                                                if (column.id === "lastActive") {
-                                                    return (
-                                                        <TableCell key={column.id} align={column.align}>
-                                                            {
-                                                                "2 semanas"
-                                                            }
-                                                        </TableCell>
-                                                    )
-                                                }
-                                                if (column.id === "permisos") {
-                                                    return (
-                                                        <TableCell key={column.id} align={column.align}>
-                                                            {row.userRole === 102
-                                                                ? ("Puede ver")
-                                                                : ("Puede editar")
-                                                            }
-                                                        </TableCell>
-                                                    )
-                                                }
-                                                if (column.id === "userRole") {
-
-                                                    return (
-                                                        <TableCell key={column.id} align={column.align}>
-                                                            {
-                                                                <SelectMenuRole 
-                                                                    role={row.userRole}
-                                                                    userId={row.userId}
-                                                                    onRoleChange={handleRoleChange}
-                                                                    />
-                                                            }
-                                                        </TableCell>
-                                                    )
-                                                }
-                                            })
-                                        }
+                                        {columns.map(column => (
+                                            <TableCell key={column.id} align={column.align}>
+                                                {column.id === NAME_COLUMN_ID ? (
+                                                    <div className='flex items-center'>
+                                                        <Checkbox />
+                                                        <UserImage />
+                                                        {`${row.userName} ${row.userLastname}`}
+                                                    </div>
+                                                ) : column.id === "userEmail" ? (
+                                                    row.userEmail
+                                                ) : column.id === "lastActive" ? (
+                                                    "2 semanas"
+                                                ) : column.id === "permisos" ? (
+                                                    row.userRole === 102 ? "Puede ver" : "Puede editar"
+                                                ) : column.id === "userRole" ? (
+                                                    <SelectMenuRole
+                                                        role={row.userRole}
+                                                        userId={row.userId}
+                                                        onRoleChange={handleRoleChange}
+                                                    />
+                                                ) : null}
+                                            </TableCell>
+                                        ))}
                                     </TableRow>
                                 )
                             })
