@@ -27,7 +27,7 @@ export default function HomeLayout({ children, }: { children: React.ReactNode })
                 {(userInformation?.roleId === UserRoles.ADMINISTRADOR) &&
                     (
                         <>
-                            <Link href="/">Gestión de Roles</Link>
+                            <Link href="/role-management">Gestión de Roles</Link>
                             <Link href="/">Gestión de Vuelos</Link>
                         </>
                     )}
